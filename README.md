@@ -3,8 +3,8 @@
 Welcome to the Metacritic Scraper project. This application allows users to scrape data from Metacritic's website and store it in a database. The data can be filtered based on media type (Game, Movie, TV), platform, and genre.
 ## Links
 
--  **Project Landing Page**: [http://your-server-address/phase2_Andrew-1.0/index.html]
--  **Javadoc Documentation**: [http://server-address/javadoc] (Replace when ready)
+-  **Project Landing Page**: https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/index.html
+-  **Javadoc Documentation**: http://server-address/javadoc (Replace when ready)
 
 ## Sample Query Strings
 
