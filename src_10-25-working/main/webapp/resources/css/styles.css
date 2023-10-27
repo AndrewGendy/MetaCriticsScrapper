@@ -1,0 +1,36 @@
+/* === Variables === */
+:root {
+    --light-grey: #f3f3f3;
+    --blue: #3498db;
+}
+
+body {
+    background-color: beige;
+}
+
+/* === Loader Styles === */
+.loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 16px solid var(--light-grey);
+    border-top: 16px solid var(--blue);
+
+    animation: rotate360 2s linear infinite;
+
+    display: none; 
+}
+
+@keyframes rotate360 {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.u-hidden {
+    display: none;
+}

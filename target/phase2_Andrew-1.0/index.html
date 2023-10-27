@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Metacritic Scraper</title>
+        <!-- Include jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- include CSS -->
+        <link rel="stylesheet" href="resources/css/styles.css">
+        <!-- Include JS -->
+        <script src="resources/js/scripts.js"></script>
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+              rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body>
+        <div class="container mt-5">
+            <h1>Welcome to the Metacritic Scraper</h1>
+            <h2>
+                <b><i>Please wait a few seconds after clicking the submit button!</i></b>
+            </h2>
+            <form id="metacriticForm" class="mb-3">
+                <div class="row">
+                    <!-- Media Type Dropdown -->
+                    <div class="col-md-3 form-group">
+                        <label for="mediaType">Media Type:</label>
+                        <select name="mediaType" id="mediaType" class="form-control">
+                            <option value="game">Game</option>
+                            <option value="movie">Movie</option>
+                            <option value="tv">TV</option>
+                        </select>
+                    </div>
+                    <!-- Platforms Dropdown -->
+                    <div class="col-md-3 form-group u-hidden" id="gamePlatformsDiv">
+                        <label for="platforms">Platforms:</label>
+                        <select name="platforms" id="platforms" class="form-control">
+                            <option value="PS5">PS5</option>
+                            <option value="XboxSeries">Xbox Series X/S</option>
+                            <option value="switch">Nintendo Switch</option>
+                            <option value="pc">PC</option>
+                            <option value="mobile">Mobile</option>
+                            <option value="xboxone">Xbox One</option>
+                            <!-- Add Other Platforms as needed -->
+                        </select>
+                    </div>
+                    <!-- Genres Dropdown -->
+                    <div class="col-md-3 form-group u-hidden" id="gameGenresDiv">
+                        <label for="gameGenres">Genres:</label>
+                        <select name="gameGenres" id="gameGenres" class="form-control">
+                            <option value="action">Action</option>
+                            <option value="rpg">RPG</option>
+                            <option value="strategy">Strategy</option>
+                            <option value="survival">Survival</option>
+                            <option value="shooter">Shooter</option>
+                            <!-- Add Other Genres as needed -->
+                        </select>
+                    </div>
+                    <!-- Submit and Show Games Buttons -->
+                    <div class="col-md-3 form-group d-flex">
+                        <button type="submit" class="btn btn-primary me-2">Submit</button>
+                        <button id="showGamesBtn" class="btn btn-secondary">Show Games</button>
+                    </div>
+                </div>
+            </form>
+            <form id="dropTablesForm" method="post">
+                <label>
+                    <input type="checkbox" name="tableNames" value="agend932GamesDB"> GamesDB
+                </label>
+                <label>
+                    <input type="checkbox" name="tableNames" value="agend932MoviesDB"> MoviesDB
+                </label>
+                <label>
+                    <input type="checkbox" name="tableNames" value="agend932TVsDB"> TVsDB
+                </label>
+                <button type="button" id="dropTablesBtn">Drop Selected Tables</button>
+            </form>
+            <div class="container mt-5">
+                <table id="gamesTable" class="table table-bordered table-striped">
+                    <tbody>
+                        <!-- Rows will be added here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="loader" class="loader"></div>
+            <div id="results"></div>
+        </body>
+    </html>
