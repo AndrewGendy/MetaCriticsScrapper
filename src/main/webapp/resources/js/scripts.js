@@ -39,8 +39,10 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 hideLoader();
                 console.error("An error occurred in ajaxRequest function: ", error);
+                console.error("Status: ", status);
+                console.error("Response: ", xhr.responseText);
                 results.html("<p>An error occurred while processing your request.</p>");
-            }
+            }            
         });
     }
 

@@ -29,7 +29,7 @@ public class DatabaseHandler {
                 "CREATE TABLE %s (" +
                         "mediaType VARCHAR2(50), " +
                         "title VARCHAR2(255) NOT NULL UNIQUE, " +
-                        "description VARCHAR2(1000), " +
+                        "description VARCHAR2(2000), " +
                         "platform VARCHAR2(50), " +
                         "genre VARCHAR2(50), " +
                         "pictureUrl VARCHAR2(255), " +

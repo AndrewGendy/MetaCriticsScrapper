@@ -38,9 +38,11 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 hideLoader();
-                console.error("An error occurred: ", error);
+                console.error("An error occurred in ajaxRequest function: ", error);
+                console.error("Status: ", status);
+                console.error("Response: ", xhr.responseText);
                 results.html("<p>An error occurred while processing your request.</p>");
-            }
+            }            
         });
     }
 
@@ -52,9 +54,9 @@ $(document).ready(function () {
         });
     });
 
-    $("#showGamesBtn").click(function () {
+    $("#showDataBtn").click(function () {
         // Use the generic function with the appropriate arguments
-        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'getAllData' }, function (data) {
+        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchAllData' }, function (data) {
             console.log("AJAX Request succeeded");
             console.log(data);  // log the data received from the server
             populateGamesTable(data); // call populateGamesTable function below

@@ -30,7 +30,7 @@ public class MetacriticBrowseScrapper {
                     break;
                 } else {
                     for (Element result : results) {
-                        Media media = extractMediaFromElement(result);
+                        Media media = extractMediaFromElement(result, mediaType, platform, genre);
                         mediasList.add(media);
                     }
                 }
@@ -46,7 +46,7 @@ public class MetacriticBrowseScrapper {
         return mediasList;
     }
 
-    private static Media extractMediaFromElement(Element result) {
+    private static Media extractMediaFromElement(Element result, String mediaType, String platform, String genre) {
         String pictureUrl = result.select("img[src]").attr("src");
         String title = result.select("h3.c-finderProductCard_titleHeading span:nth-child(2)").text();
         String description = result.select("div.c-finderProductCard_description span").text();
@@ -54,9 +54,9 @@ public class MetacriticBrowseScrapper {
         String ratedScore = result.select("span:nth-child(3)").text();
         String originalURL = result.select("a.c-finderProductCard_container").attr("href");
         String extraInfo = result.select("div.product_details").text();
-
-        return new Media(pictureUrl, title, description, releaseDate, ratedScore, originalURL, extraInfo);
-    }
+    
+        return new Media(mediaType, pictureUrl, title, description, platform, genre, releaseDate, ratedScore, originalURL, extraInfo);
+    }    
 }
 
 

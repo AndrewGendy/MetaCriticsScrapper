@@ -10,8 +10,7 @@
   <packaging>war</packaging>
 
   <name>phase2_Andrew</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <url>https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/index.html</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -96,7 +95,60 @@
           <artifactId>maven-war-plugin</artifactId>
           <version>3.3.1</version>
         </plugin>
-
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.0.0</version>
+            <executions>
+                <!-- git add . -->
+                <execution>
+                    <id>git-add</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>exec</goal>
+                    </goals>
+                    <configuration>
+                        <executable>git</executable>
+                        <arguments>
+                            <argument>add</argument>
+                            <argument>.</argument>
+                        </arguments>
+                    </configuration>
+                </execution>
+                <!-- git commit -->
+                <execution>
+                    <id>git-commit</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>exec</goal>
+                    </goals>
+                    <configuration>
+                        <executable>git</executable>
+                        <arguments>
+                            <argument>commit</argument>
+                            <argument>-m</argument>
+                            <argument>"Automated commit message"</argument>
+                        </arguments>
+                    </configuration>
+                </execution>
+                <!-- git push -->
+                <execution>
+                    <id>git-push</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>exec</goal>
+                    </goals>
+                    <configuration>
+                        <executable>git</executable>
+                        <arguments>
+                            <argument>push</argument>
+                            <argument>origin</argument>
+                            <argument>master</argument>
+                        </arguments>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
