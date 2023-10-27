@@ -4,20 +4,20 @@ Welcome to the Metacritic Scraper project. This application allows users to scra
 ## Links
 
 -  **Project Landing Page**: https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/index.html
--  **Javadoc Documentation**: http://server-address/javadoc (Replace when ready)
+-  **Javadoc Documentation**: https://agend932.kutztown.edu:8443/javadoc (Replace when ready if changed)
 
 ## Sample Query Strings
 
 To demonstrate how the site was accessed, here are some sample query strings:
 
     To scrape game data for PC platform and action genre:
-    http://your-server-address/phase2_Andrew-1.0/MetacriticServlet?mediaType=game&platform=PC&genre=action
+    https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?mediaType=game&platform=PC&genre=action
 
     To scrape movie data:
-    http://your-server-address/phase2_Andrew-1.0/MetacriticServlet?mediaType=movie
+    https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?mediaType=movie
 
     To fetch all stored data:
-    http://your-server-address/phase2_Andrew-1.0/MetacriticServlet?action=getAllData
+    https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?action=getAllData
 
 (Replace the server address with your actual server address)
 ## Design Decisions

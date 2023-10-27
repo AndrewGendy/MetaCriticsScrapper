@@ -15,12 +15,13 @@ public class MetacriticServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        // sendResponseMessage(response, "doGet called with action: " + action);
         switch (action) {
             case "fetchAllData":
                 fetchAllData(response);
                 break;
             default:
-                sendErrorResponse(response, "Invalid action in doGet.");
+                sendResponseMessage(response, "Invalid action in doGet.");
         }
     }
 
@@ -28,40 +29,43 @@ public class MetacriticServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        sendResponseMessage(response, "doPost called with action: " + action);
         switch (action) {
             case "dropTables":
+                // sendResponseMessage(response, "dropTables called in the servlet.");
                 dropSelectedTables(request, response);
                 break;
             case "scrapeData":
+                // sendResponseMessage(response, "scrapeData Called in the servlet.");
                 processScrapeRequest(request, response);
                 break;
             default:
-                sendErrorResponse(response, "Invalid action in doPost.");
+                sendResponseMessage(response, "Invalid action in doPost.");
         }
     }    
 
     private void processScrapeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
-        response.setContentType("text/html");
-
-        String queryType = "/browse/"; // later we could scrape the search page which works slightly differently
         String mediaType = request.getParameter("mediaType");
         String platform = request.getParameter("platform");
         String genre = request.getParameter("genre");
+        sendResponseMessage(response, "Processing scrape request for mediaType: " + mediaType + ", platform: " + platform + ", genre: " + genre);
 
+        String queryType = "/browse/";
         String basePart = "all/all/all-time/metascore/?";
         String urlRequest = "https://www.metacritic.com" + queryType + mediaType + "/" + basePart + "&platform=" + platform + "&genre=" + genre + "&page=";
+        sendResponseMessage(response, "Constructed URL for scraping: " + urlRequest);
         
         List<Media> scrapedMediaList = MetacriticBrowseScrapper.scrapeMetacritic(urlRequest, mediaType, platform, genre);
     
         // Save the scraped results to the database
         DatabaseHandler dbHandler = new DatabaseHandler();
-        dbHandler.saveResultsToDB("agend932MediasDB", scrapedMediaList, response); // "agend932MediasDB" is table name for now
+        dbHandler.saveResultsToDB("agend932MediasDB", scrapedMediaList, response);
     
-        out.println("Scraped and saved " + scrapedMediaList.size() + " media entries to the database.");
+        sendResponseMessage(response, "Scraped and saved " + scrapedMediaList.size() + " media entries to the database.");
     }
 
     private void fetchAllData(HttpServletResponse response) throws IOException {
+        // sendResponseMessage(response, "Fetching all data from the database.");
         DatabaseHandler dbHandler = new DatabaseHandler();
         List<Media> mediaList = dbHandler.fetchAllData(response);
 
@@ -72,15 +76,19 @@ public class MetacriticServlet extends HttpServlet {
     }
 
     private void dropSelectedTables(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
-        out.println("Request: " + request);
         String[] tableNames = request.getParameterValues("tableNames");
+        sendResponseMessage(response, "Dropping tables: " + String.join(", ", tableNames));
         DatabaseHandler dbHandler = new DatabaseHandler();
         dbHandler.dropTables(response, tableNames);
     }
 
-    private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
-        PrintWriter out = response.getWriter();
-        out.println(message);
+    // Handles errors by sending a response to the client
+    private void sendResponseMessage(HttpServletResponse response, String message) {
+        try {
+            PrintWriter out = response.getWriter();
+            out.println(message);
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
     }
 }

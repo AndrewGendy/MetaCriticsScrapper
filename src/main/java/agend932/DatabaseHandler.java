@@ -95,10 +95,15 @@ public class DatabaseHandler {
                 medias.add(media);
             }
         } catch (SQLException e) {
+            if (e.getErrorCode() == 942) {
+                handleError( response, "There is no table in the DB. Code: " + e.getMessage());
+            } else {
             handleError(response, "An error occurred while fetching data: " + e.getMessage());
         }
+    }
         return medias;
     }
+
 
     // Drops the specified tables from the database
     public void dropTables(HttpServletResponse response, String... tableNames) {
