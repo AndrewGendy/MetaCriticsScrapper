@@ -10,10 +10,11 @@ public class Media {
     private String releaseDate;
     private String ratedScore;
     private String originalURL;
+    private String metascore;
     private String extraInfo;
     
     // Constructor
-    public Media(String mediaType, String pictureUrl, String title, String description, String platform, String genre, String releaseDate, String ratedScore, String originalURL, String extraInfo) {
+    public Media(String mediaType, String pictureUrl, String title, String description, String platform, String genre, String releaseDate, String ratedScore, String originalURL, String metascore, String extraInfo) {
         this.mediaType = mediaType;
         this.pictureUrl = pictureUrl;
         this.title = title;
@@ -23,6 +24,7 @@ public class Media {
         this.releaseDate = releaseDate;
         this.ratedScore = ratedScore;
         this.originalURL = originalURL;
+        this.metascore = metascore;
         this.extraInfo = extraInfo;
     }
 
@@ -61,6 +63,10 @@ public class Media {
 
     public String getOriginalURL() {
         return originalURL;
+    }
+
+    public String getMetascore() {
+        return metascore;
     }
 
     public String getExtraInfo() {

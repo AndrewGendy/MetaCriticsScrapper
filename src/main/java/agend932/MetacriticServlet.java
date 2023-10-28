@@ -20,6 +20,9 @@ public class MetacriticServlet extends HttpServlet {
             case "fetchAllData":
                 fetchAllData(response);
                 break;
+            case "fetchFilteredData":
+                fetchFilteredData(request, response);;
+                break;
             default:
                 sendResponseMessage(response, "Invalid action in doGet.");
         }
@@ -29,31 +32,42 @@ public class MetacriticServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        sendResponseMessage(response, "doPost called with action: " + action);
+        // sendResponseMessage(response, "doPost called with action: " + action);
         switch (action) {
             case "dropTables":
-                // sendResponseMessage(response, "dropTables called in the servlet.");
-                dropSelectedTables(request, response);
+                dropTables();
                 break;
             case "scrapeData":
-                // sendResponseMessage(response, "scrapeData Called in the servlet.");
                 processScrapeRequest(request, response);
                 break;
             default:
                 sendResponseMessage(response, "Invalid action in doPost.");
         }
-    }    
+    }
+
+    @Override
+    public void destroy() {
+        // Call the dropTables function
+        dropTables();
+        // Call the parent destroy method (not mandatory but can be good practice)
+        super.destroy();
+    }
 
     private void processScrapeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String mediaType = request.getParameter("mediaType");
         String platform = request.getParameter("platform");
         String genre = request.getParameter("genre");
-        sendResponseMessage(response, "Processing scrape request for mediaType: " + mediaType + ", platform: " + platform + ", genre: " + genre);
+        String platformParam = "&platform=";
+
+        if ("movie".equals(mediaType) || "tv".equals(mediaType)) {
+            platformParam = "&network=";
+        }
+        // sendResponseMessage(response, "Processing scrape request for mediaType: " + mediaType + ", platform: " + platform + ", genre: " + genre);
 
         String queryType = "/browse/";
         String basePart = "all/all/all-time/metascore/?";
-        String urlRequest = "https://www.metacritic.com" + queryType + mediaType + "/" + basePart + "&platform=" + platform + "&genre=" + genre + "&page=";
-        sendResponseMessage(response, "Constructed URL for scraping: " + urlRequest);
+        String urlRequest = "https://www.metacritic.com" + queryType + mediaType + "/" + basePart + platformParam + platform + "&genre=" + genre + "&page=";
+        // sendResponseMessage(response, "Constructed URL for scraping: " + urlRequest);
         
         List<Media> scrapedMediaList = MetacriticBrowseScrapper.scrapeMetacritic(urlRequest, mediaType, platform, genre);
     
@@ -61,7 +75,7 @@ public class MetacriticServlet extends HttpServlet {
         DatabaseHandler dbHandler = new DatabaseHandler();
         dbHandler.saveResultsToDB("agend932MediasDB", scrapedMediaList, response);
     
-        sendResponseMessage(response, "Scraped and saved " + scrapedMediaList.size() + " media entries to the database.");
+        // sendResponseMessage(response, "Scraped and saved " + scrapedMediaList.size() + " media entries to the database.");
     }
 
     private void fetchAllData(HttpServletResponse response) throws IOException {
@@ -75,11 +89,28 @@ public class MetacriticServlet extends HttpServlet {
         response.getWriter().write(json);
     }
 
-    private void dropSelectedTables(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String[] tableNames = request.getParameterValues("tableNames");
-        sendResponseMessage(response, "Dropping tables: " + String.join(", ", tableNames));
+    private void fetchFilteredData(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String mediaType = request.getParameter("mediaType");
+        String platform = request.getParameter("platform");
+        String genre = request.getParameter("genre");
+
+        // Check for null values and set to empty string if null
+        mediaType = (mediaType == null) ? "" : mediaType;
+        platform = (platform == null) ? "" : platform;
+        genre = (genre == null) ? "" : genre;
+
         DatabaseHandler dbHandler = new DatabaseHandler();
-        dbHandler.dropTables(response, tableNames);
+        List<Media> mediaList = dbHandler.fetchFilteredData(response, mediaType, platform, genre);
+
+        String json = new Gson().toJson(mediaList);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json);
+    }
+    
+    private void dropTables() {
+        DatabaseHandler dbHandler = new DatabaseHandler();
+        dbHandler.dropTables();
     }
 
     // Handles errors by sending a response to the client

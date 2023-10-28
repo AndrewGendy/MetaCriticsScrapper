@@ -3,23 +3,22 @@
 Welcome to the Metacritic Scraper project. This application allows users to scrape data from Metacritic's website and store it in a database. The data can be filtered based on media type (Game, Movie, TV), platform, and genre.
 ## Links
 
--  **Project Landing Page**: https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/index.html
--  **Javadoc Documentation**: https://agend932.kutztown.edu:8443/javadoc (Replace when ready if changed)
+-  **Project Landing Page**: https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/
+-  **Javadoc Documentation**: https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/javadoc (Replace when ready if changed)
 
 ## Sample Query Strings
 
 To demonstrate how the site was accessed, here are some sample query strings:
 
     To scrape game data for PC platform and action genre:
-    https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?mediaType=game&platform=PC&genre=action
+    https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?action=fetchFilteredData&mediaType=game&platform=PS5&genre=action
 
     To scrape movie data:
-    https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?mediaType=movie
+    https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?action=fetchFilteredData&mediaType=movie
 
     To fetch all stored data:
-    https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?action=getAllData
+    https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?action=fetchAllData
 
-(Replace the server address with your actual server address)
 ## Design Decisions
 ### Database Handling
 

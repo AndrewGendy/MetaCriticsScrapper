@@ -37,30 +37,33 @@
                         <label for="platforms">Platforms:</label>
                         <select name="platforms" id="platforms" class="form-control">
                             <option value="PS5">PS5</option>
-                            <option value="XboxSeries">Xbox Series X/S</option>
-                            <option value="switch">Nintendo Switch</option>
+                            <option value="xbox-series-x">Xbox Series X/S</option>
+                            <option value="nintendo-switch">Nintendo Switch</option>
                             <option value="pc">PC</option>
                             <option value="mobile">Mobile</option>
-                            <option value="xboxone">Xbox One</option>
+                            <option value="xbox-one">Xbox One</option>
                             <!-- Add Other Platforms as needed -->
+                            <!-- I changed the code to instead of having 3 divs one for each media platforms to only one div for platforms and change the values using jQuery. -->
+                            <!-- It's more dynamic and can be easily extended to handle more media types or platforms in the future. AND less html is always nice :) -->
                         </select>
                     </div>
                     <!-- Genres Dropdown -->
-                    <div class="col-md-3 form-group" id="gameGenresDiv">
-                        <label for="gameGenres">Genres:</label>
-                        <select name="gameGenres" id="gameGenres" class="form-control">
-                            <option value="action">Action</option>
-                            <option value="rpg">RPG</option>
-                            <option value="strategy">Strategy</option>
-                            <option value="survival">Survival</option>
-                            <option value="shooter">Shooter</option>
-                            <!-- Add Other Genres as needed -->
+                    <div class="col-md-3 form-group" id="genresDiv">
+                        <label for="genres">Genres:</label>
+                        <select name="genres" id="genres" class="form-control">
+                            <option value="Action">Action</option>
+                            <option value="RPG">RPG</option>
+                            <option value="Strategy">Strategy</option>
+                            <option value="Survival">Survival</option>
+                            <option value="Shooter">Shooter</option>
+                            <!-- Add Other Genres as needed. (Handleing different genres for different media types same way as platforms) -->
                         </select>
                     </div>
                     <!-- Submit and Show Games Buttons -->
                     <div class="col-md-3 form-group d-flex">
-                        <button id="scrapeDataBtn" class="btn btn-primary me-2">Submit</button>
-                        <button id="showDataBtn" class="btn btn-secondary">Show what's in the DB</button>
+                        <button id="scrapeDataBtn" class="btn btn-primary me-2">Scrape new Data</button>
+                        <button id="showDataBtn" class="btn btn-secondary">Show all data from DB</button>
+                        <button id="showFilteredDataBtn" class="btn btn-secondary">Show filtered data from DB</button>
                     </div>
                 </div>
             </form>
@@ -81,7 +84,7 @@
                 <button type= "button" id= "dropTablesBtn">Drop Selected Tables</button>
             </form>
             <div class= "container mt-5">
-                <table id= "gamesTable" class= "table table-bordered table-striped">
+                <table id= "resultsTable" class= "table table-bordered table-striped">
                     <tbody>
                         <!-- Rows will be added here by JavaScript -->
                     </tbody>

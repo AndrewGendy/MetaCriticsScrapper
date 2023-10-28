@@ -1,26 +1,27 @@
 $(document).ready(function () {
-    const gamePlatformsDiv = $('#gamePlatformsDiv');
-    const gameGenresDiv = $('#gameGenresDiv');
     const loader = $('#loader');
     const results = $('#results');
 
-    function toggleGameSections(display) {
-        // Change the display values of the game sections
-        gamePlatformsDiv.css('display', display);
-        gameGenresDiv.css('display', display);
-    }
+    // // NOT USING THIS ANYMORE SINCE I AM NOT HIDING AND SHOWING DIVs IN THE HTML. I AM NOW KEEPING ONE DIC AND CHANGING IT USING JS
+    // const platformsDiv = $('#platformsDiv');
+    // const genresDiv = $('#genresDiv');
+    // function toggleGameSections(display) {
+    //     // Change the display values of the game sections
+    //     gamePlatformsDiv.css('display', display);
+    //     gameGenresDiv.css('display', display);
+    // }
 
-    $('#mediaType').on('change', function () {
-        // Log the value of the mediaType input
-        console.log("mediaType changed to: ", this.value);
+    // $('#mediaType').on('change', function () {
+    //     // Log the value of the mediaType input
+    //     console.log("mediaType changed to: ", this.value);
 
-        // Toggle the game sections based on the mediaType value
-        if (this.value === 'game') {
-            toggleGameSections('block');
-        } else {
-            toggleGameSections('none');
-        }
-    });
+    //     // Toggle the game sections based on the mediaType value
+    //     if (this.value === 'game') {
+    //         toggleGameSections('block');
+    //     } else {
+    //         toggleGameSections('none');
+    //     }
+    // });
 
     function showLoader() {
         // Show the loader element
@@ -76,13 +77,20 @@ $(document).ready(function () {
 
         let mediaType = $("#mediaType").val();
         let platform = $("#platforms").val();
-        let genre = $("#gameGenres").val();
+        let genre = $("#genres").val();
 
         // Use the generic function with the appropriate arguments
         ajaxRequest("POST", "/phase2_Andrew-1.0/MetacriticServlet", { action: 'scrapeData', mediaType: mediaType, platform: platform, genre: genre }, function (response) {
             // Log that the response was received and display it in the results element
             console.log("Response received from scrapeData action");
             results.html(response);
+
+            // After scraping, fetch the data based on the selected criteria and populate the table
+            ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchFilteredData', mediaType: mediaType, platform: platform, genre: genre }, function (data) {
+                // Log that the data was received and call populateResultsTable function with it
+                console.log("Filtered data received after scraping");
+                populateResultsTable(data);
+            });
         });
     });
 
@@ -93,9 +101,26 @@ $(document).ready(function () {
 
         // Use the generic function with the appropriate arguments
         ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchAllData' }, function (data) {
-            // Log that the data was received and call populateGamesTable function with it
+            // Log that the data was received and call populateResultsTable function with it
             console.log("Data received from fetchAllData action");
-            populateGamesTable(data);
+            populateResultsTable(data);
+        });
+    });
+
+    $("#showFilteredDataBtn").click(function (e) {
+        e.preventDefault();
+        // Log that the showFilteredDataBtn was clicked
+        console.log("showFilteredDataBtn clicked");
+
+        let mediaType = $("#mediaType").val();
+        let platform = $("#platforms").val();
+        let genre = $("#genres").val();
+
+        // Use the generic function with the appropriate arguments
+        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchFilteredData', mediaType: mediaType, platform: platform, genre: genre }, function (data) {
+            // Log that the data was received and call populateResultsTable function with it
+            console.log("Data received from fetchFilteredData action");
+            populateResultsTable(data);
         });
     });
 
@@ -103,6 +128,11 @@ $(document).ready(function () {
 
         // Log that the dropTablesBtn was clicked
         console.log("dropTablesBtn clicked");
+
+        // Get all checked tableNames values
+        let tableNames = $('input[name="tableNames"]:checked').map(function() {
+            return $(this).val();
+        }).get();
 
         // Use the generic function with the appropriate arguments
         ajaxRequest('POST', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'dropTables' }, function (response) {
@@ -112,30 +142,47 @@ $(document).ready(function () {
         });
     });
 
-    // Use a common selector for the flip elements and the panel elements
-    $('.flip').click(function () {
-        let link = $(this);
-        // Use the data attribute to store and access the corresponding panel selector
-        let panel = $(link.data('panel'));
+    $('#mediaType').change(function() {
+        let mediaType = $(this).val();
+        let platformsSelect = $('#platforms');
+        let genresSelect = $('#genres');
+        platformsSelect.empty(); // Clear current platforms options
+        genresSelect.empty(); // Clear current genres options
 
-        // Log the link and panel elements that were clicked
-        console.log("flip element clicked: ", link);
-        console.log("panel element toggled: ", panel);
-
-        panel.slideToggle('slow', function () {
-            if ($(this).is(":visible")) {
-                link.text('Close');
-            } else {
-                link.text('Read More');
-            }
-        });
+        if (mediaType === 'game') {
+            platformsSelect.append('<option value="PS5">PS5</option>');
+            platformsSelect.append('<option value="Xbox-Series-X">Xbox Series X/S</option>');
+            platformsSelect.append('<option value="Nintendo-Switch">Nintendo Switch</option>');
+            platformsSelect.append('<option value="PC">PC</option>');
+            platformsSelect.append('<option value="Mobile">Mobile</option>');
+            platformsSelect.append('<option value="Xbox-One">Xbox One</option>');
+            // we can add other game platforms here as needed just like done above
+            genresSelect.append('<option value="Action">Action</option>');
+            genresSelect.append('<option value="RPG">RPG</option>');
+            genresSelect.append('<option value="Strategy">Strategy</option>');
+            genresSelect.append('<option value="Survival">Survival</option>');
+            genresSelect.append('<option value="Shooter">Shooter</option>');
+            // we can add other game genres here as needed just like done above
+        } else if (mediaType === 'movie' || mediaType === 'tv') {
+            platformsSelect.append('<option value="Netflix">Netflix</option>');
+            platformsSelect.append('<option value="Hulu">Hulu</option>');
+            platformsSelect.append('<option value="Starz">Starz</option>');
+            platformsSelect.append('<option value="Disney-Plus">Disney+</option>');
+            platformsSelect.append('<option value="Prime-Video">Prime Video</option>');
+            // we can add other movie and tv platforms here as needed just like done above
+            genresSelect.append('<option value="Action">Action</option>');
+            genresSelect.append('<option value="Comedy">Comedy</option>');
+            genresSelect.append('<option value="Drama">Drama</option>');
+            genresSelect.append('<option value="Crime">Crime</option>');
+            genresSelect.append('<option value="Family">Family</option>');
+            // we can add other movie and tv genres here as needed just like done above
+        }
     });
 });
 
-// Function moved outside of the $(document).ready block
-function populateGamesTable(data) {
-    console.log("populateGamesTable got called");
-    const table = document.querySelector("#gamesTable");
+function populateResultsTable(data) {
+    console.log("populateResultsTable got called");
+    const table = document.querySelector("#resultsTable");
     const tableBody = table.querySelector("tbody");
 
     // Clear previous data from the table
@@ -145,7 +192,7 @@ function populateGamesTable(data) {
         const thead = table.createTHead();
         const headerRow = thead.insertRow();
 
-        ["Picture", "Title", "Description", "Platform", "Genre", "Release Date", "Rated Score"].forEach(headerText => {
+        ["Picture", "Media Type", "Title", "Description", "Platform", "Genre", "Release Date", "Rated Score", "Meta Score"].forEach(headerText => {
             const th = document.createElement("th");
             th.textContent = headerText;
             headerRow.appendChild(th);
@@ -156,28 +203,27 @@ function populateGamesTable(data) {
         const row = tableBody.insertRow();
 
         const picCell = row.insertCell();
+        const mediaTypeCell = row.insertCell();
         const titleCell = row.insertCell();
         const descCell = row.insertCell();
         const platCell = row.insertCell();
         const genreCell = row.insertCell();
         const dateCell = row.insertCell();
         const scoreCell = row.insertCell();
+        const metaCell = row.insertCell();
 
-        picCell.innerHTML = `<a href="https://www.metacritic.com${game.originalURL}"><img src="${game.pictureUrl}" alt="${game.title}" height="132" width="88"></a>`;
-        titleCell.innerHTML = `<a href="https://www.metacritic.com${game.originalURL}">${game.title}</a>`;
+        picCell.innerHTML = `<a href="${game.originalURL}" target="_blank"><img src="${game.pictureUrl}" alt="${game.title}" height="132" width="88"></a>`;
+        mediaTypeCell.textContent = capitalizeFirstLetter(game.mediaType);
+        titleCell.innerHTML = `<a href="${game.originalURL}" target="_blank">${game.title}</a>`;
         descCell.textContent = game.description;
         platCell.textContent = game.platform;
         genreCell.textContent = game.genre;
         dateCell.textContent = game.releaseDate;
         scoreCell.textContent = game.ratedScore;
+        metaCell.textContent = game.metascore;
     });
 }
-
-$(document).ready(function () {
-    const gamePlatformsDiv = $('#gamePlatformsDiv');
-    const gameGenresDiv = $('#gameGenresDiv');
-    const loader = $('#loader');
-    const results = $('#results');
-
-    // ... [Rest of your code]
-});
+// a simple function to capitalize the first letter of a string
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}

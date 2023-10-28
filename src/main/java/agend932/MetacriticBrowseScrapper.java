@@ -35,7 +35,7 @@ public class MetacriticBrowseScrapper {
                     }
                 }
 
-                // After scraping the page, wait for 2 seconds before fetching the next page
+                // After scraping the page, wait for 2 seconds before fetching the next page (to prevent hammering the website, and potentially getting my ip blocked)
                 Thread.sleep(2000);
                 pageNumber++;
 
@@ -53,9 +53,10 @@ public class MetacriticBrowseScrapper {
         String releaseDate = result.select("span.u-text-uppercase").text();
         String ratedScore = result.select("span:nth-child(3)").text();
         String originalURL = result.select("a.c-finderProductCard_container").attr("href");
+        String metascore = result.select("div.c-siteReviewScore span").text();
         String extraInfo = result.select("div.product_details").text();
     
-        return new Media(mediaType, pictureUrl, title, description, platform, genre, releaseDate, ratedScore, originalURL, extraInfo);
+        return new Media(mediaType, pictureUrl, title, description, platform, genre, releaseDate, ratedScore, originalURL, metascore, extraInfo);
     }    
 }
 

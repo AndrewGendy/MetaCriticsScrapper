@@ -96,6 +96,14 @@
           <version>3.3.1</version>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.2.1</version>
+          <configuration> <!-- save the war file directory in the webapps dir instead of me copying it every time :) -->
+            <outputDirectory>/home/students.kutztown.edu/agend932/webapps</outputDirectory> 
+          </configuration>
+        </plugin>
+        <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
             <version>3.0.0</version>
