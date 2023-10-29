@@ -23,18 +23,18 @@ $(document).ready(function () {
     //     }
     // });
 
-    function showLoader() {
+    const showLoader = function() {
         // Show the loader element
         loader.css('display', 'block');
     }
 
-    function hideLoader() {
+    const hideLoader = function() {
         // Hide the loader element
         loader.css('display', 'none');
     }
 
     // A generic function that handles the AJAX requests
-    function ajaxRequest(type, url, data, successCallback) {
+    const ajaxRequest = function(type, url, data, successCallback) {
         // Log the arguments of the ajaxRequest function
         console.log("ajaxRequest called with type: ", type, "url: ", url, "data: ", data);
 
@@ -74,7 +74,11 @@ $(document).ready(function () {
         e.preventDefault();
         // Log that the scrapeDataBtn was clicked
         console.log("scrapeDataBtn clicked");
+        
+        // Clear previous data from the table
+        tableBody.innerHTML = '';
 
+        let sortOption = $("#sortOptions").val();
         let mediaType = $("#mediaType").val();
         let platform = $("#platforms").val();
         let genre = $("#genres").val();
@@ -84,9 +88,8 @@ $(document).ready(function () {
             // Log that the response was received and display it in the results element
             console.log("Response received from scrapeData action");
             results.html(response);
-
             // After scraping, fetch the data based on the selected criteria and populate the table
-            ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchFilteredData', mediaType: mediaType, platform: platform, genre: genre }, function (data) {
+            ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchFilteredData', mediaType: mediaType, platform: platform, genre: genre, sort: sortOption }, function (data) {
                 // Log that the data was received and call populateResultsTable function with it
                 console.log("Filtered data received after scraping");
                 populateResultsTable(data);
@@ -98,6 +101,9 @@ $(document).ready(function () {
         e.preventDefault();
         // Log that the showDataBtn was clicked
         console.log("showDataBtn clicked");
+        
+        // Clear previous data from the table
+        tableBody.innerHTML = '';
 
         // Use the generic function with the appropriate arguments
         ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchAllData' }, function (data) {
@@ -112,12 +118,16 @@ $(document).ready(function () {
         // Log that the showFilteredDataBtn was clicked
         console.log("showFilteredDataBtn clicked");
 
+        // Clear previous data from the table
+        tableBody.innerHTML = '';
+
+        let sortOption = $("#sortOptions").val();
         let mediaType = $("#mediaType").val();
         let platform = $("#platforms").val();
         let genre = $("#genres").val();
 
         // Use the generic function with the appropriate arguments
-        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchFilteredData', mediaType: mediaType, platform: platform, genre: genre }, function (data) {
+        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchFilteredData', mediaType: mediaType, platform: platform, genre: genre, sort: sortOption }, function (data) {
             // Log that the data was received and call populateResultsTable function with it
             console.log("Data received from fetchFilteredData action");
             populateResultsTable(data);
@@ -130,26 +140,27 @@ $(document).ready(function () {
         console.log("dropTablesBtn clicked");
 
         // Get all checked tableNames values
-        let tableNames = $('input[name="tableNames"]:checked').map(function() {
+        const tableNames = $('input[name="tableNames"]:checked').map(function() {
             return $(this).val();
         }).get();
 
         // Use the generic function with the appropriate arguments
         ajaxRequest('POST', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'dropTables' }, function (response) {
             // Log that the tables were dropped and display a success message to the user
-            console.log("Tables dropped successfully.", response);
+            // console.log("Tables dropped successfully.", response);
             results.html("<p>Tables dropped successfully.</p>");
         });
     });
 
     $('#mediaType').change(function() {
-        let mediaType = $(this).val();
-        let platformsSelect = $('#platforms');
-        let genresSelect = $('#genres');
+        const mediaType = $(this).val();
+        const platformsSelect = $('#platforms');
+        const genresSelect = $('#genres');
         platformsSelect.empty(); // Clear current platforms options
         genresSelect.empty(); // Clear current genres options
 
         if (mediaType === 'game') {
+            // platformsSelect.append('<option value=""></option>');
             platformsSelect.append('<option value="PS5">PS5</option>');
             platformsSelect.append('<option value="Xbox-Series-X">Xbox Series X/S</option>');
             platformsSelect.append('<option value="Nintendo-Switch">Nintendo Switch</option>');
@@ -157,6 +168,7 @@ $(document).ready(function () {
             platformsSelect.append('<option value="Mobile">Mobile</option>');
             platformsSelect.append('<option value="Xbox-One">Xbox One</option>');
             // we can add other game platforms here as needed just like done above
+            // genresSelect.append('<option value=""></option>');
             genresSelect.append('<option value="Action">Action</option>');
             genresSelect.append('<option value="RPG">RPG</option>');
             genresSelect.append('<option value="Strategy">Strategy</option>');
@@ -164,12 +176,14 @@ $(document).ready(function () {
             genresSelect.append('<option value="Shooter">Shooter</option>');
             // we can add other game genres here as needed just like done above
         } else if (mediaType === 'movie' || mediaType === 'tv') {
+            // platformsSelect.append('<option value=""></option>');
             platformsSelect.append('<option value="Netflix">Netflix</option>');
             platformsSelect.append('<option value="Hulu">Hulu</option>');
             platformsSelect.append('<option value="Starz">Starz</option>');
             platformsSelect.append('<option value="Disney-Plus">Disney+</option>');
             platformsSelect.append('<option value="Prime-Video">Prime Video</option>');
             // we can add other movie and tv platforms here as needed just like done above
+            // genresSelect.append('<option value=""></option>');
             genresSelect.append('<option value="Action">Action</option>');
             genresSelect.append('<option value="Comedy">Comedy</option>');
             genresSelect.append('<option value="Drama">Drama</option>');
@@ -180,10 +194,11 @@ $(document).ready(function () {
     });
 });
 
+const table = document.querySelector("#resultsTable");
+const tableBody = table.querySelector("tbody");
+
 function populateResultsTable(data) {
-    console.log("populateResultsTable got called");
-    const table = document.querySelector("#resultsTable");
-    const tableBody = table.querySelector("tbody");
+    // console.log("populateResultsTable got called");
 
     // Clear previous data from the table
     tableBody.innerHTML = '';

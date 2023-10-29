@@ -67,7 +67,7 @@ public class MetacriticServlet extends HttpServlet {
         String queryType = "/browse/";
         String basePart = "all/all/all-time/metascore/?";
         String urlRequest = "https://www.metacritic.com" + queryType + mediaType + "/" + basePart + platformParam + platform + "&genre=" + genre + "&page=";
-        // sendResponseMessage(response, "Constructed URL for scraping: " + urlRequest);
+        sendResponseMessage(response, "Constructed URL for scraping: " + urlRequest);
         
         List<Media> scrapedMediaList = MetacriticBrowseScrapper.scrapeMetacritic(urlRequest, mediaType, platform, genre);
     
@@ -75,7 +75,7 @@ public class MetacriticServlet extends HttpServlet {
         DatabaseHandler dbHandler = new DatabaseHandler();
         dbHandler.saveResultsToDB("agend932MediasDB", scrapedMediaList, response);
     
-        // sendResponseMessage(response, "Scraped and saved " + scrapedMediaList.size() + " media entries to the database.");
+        sendResponseMessage(response, "Scraped and saved " + scrapedMediaList.size() + " media entries to the database.");
     }
 
     private void fetchAllData(HttpServletResponse response) throws IOException {
@@ -93,6 +93,7 @@ public class MetacriticServlet extends HttpServlet {
         String mediaType = request.getParameter("mediaType");
         String platform = request.getParameter("platform");
         String genre = request.getParameter("genre");
+        String sortOption = request.getParameter("sort");
 
         // Check for null values and set to empty string if null
         mediaType = (mediaType == null) ? "" : mediaType;
@@ -100,14 +101,14 @@ public class MetacriticServlet extends HttpServlet {
         genre = (genre == null) ? "" : genre;
 
         DatabaseHandler dbHandler = new DatabaseHandler();
-        List<Media> mediaList = dbHandler.fetchFilteredData(response, mediaType, platform, genre);
+        List<Media> mediaList = dbHandler.fetchFilteredData(response, mediaType, platform, genre, sortOption);
 
         String json = new Gson().toJson(mediaList);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
     }
-    
+
     private void dropTables() {
         DatabaseHandler dbHandler = new DatabaseHandler();
         dbHandler.dropTables();

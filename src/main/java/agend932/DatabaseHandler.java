@@ -96,9 +96,11 @@ public class DatabaseHandler {
     // Fetches all media data from the database
     public List<Media> fetchAllData(HttpServletResponse response) {
         List<Media> medias = new ArrayList<>();
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM agend932MediasDB");
         try (Connection con = getConnection();
-                Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM agend932MediasDB")) {
+            PreparedStatement pstmt = con.prepareStatement(queryBuilder.toString())) {
+            ResultSet rs = pstmt.executeQuery();
+
             while (rs.next()) {
                 Media media = new Media(
                         rs.getString("mediaType"),
@@ -116,16 +118,16 @@ public class DatabaseHandler {
             }
         } catch (SQLException e) {
             if (e.getErrorCode() == 942) {
-                handleError( response, "There is no table in the DB with that name. Code: " + e.getMessage());
+                handleError(response, "There is no table in the DB with that name. Code: " + e.getMessage());
             } else {
-            handleError(response, "An error occurred while fetching data: " + e.getMessage());
+                handleError(response, "An error occurred while fetching data: " + e.getMessage());
+            }
         }
-    }
         return medias;
     }
 
     // Fetches Filtered media data from the database
-    public List<Media> fetchFilteredData(HttpServletResponse response, String mediaType, String platform, String genre) {
+    public List<Media> fetchFilteredData(HttpServletResponse response, String mediaType, String platform, String genre, String sortOption) {
         List<Media> medias = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM agend932MediasDB WHERE 1=1"); // Always true condition to simplify appending below
         
@@ -133,17 +135,21 @@ public class DatabaseHandler {
         if (mediaType != null && !mediaType.isEmpty() && !mediaType.equalsIgnoreCase("ALL")) {
             queryBuilder.append(" AND UPPER(mediaType) = UPPER(?)");
         }
-        
-        // Check if platform is specified and not "ALL"
         if (platform != null && !platform.isEmpty() && !platform.equalsIgnoreCase("ALL")) {
             queryBuilder.append(" AND UPPER(platform) = UPPER(?)");
         }
-        
-        // Check if genre is specified and not "ALL"
         if (genre != null && !genre.isEmpty() && !genre.equalsIgnoreCase("ALL")) {
             queryBuilder.append(" AND UPPER(genre) = UPPER(?)");
         }
-        
+        if ("metascore_asc".equals(sortOption)) {
+            queryBuilder.append(" ORDER BY metascore ASC");
+        } else if ("metascore_desc".equals(sortOption)) {
+            queryBuilder.append(" ORDER BY metascore DESC");
+        } else if ("year_asc".equals(sortOption)) {
+            queryBuilder.append(" ORDER BY releaseDate ASC");
+        } else if ("year_desc".equals(sortOption)) {
+            queryBuilder.append(" ORDER BY releaseDate DESC");
+        }
         try (Connection con = getConnection();
             PreparedStatement pstmt = con.prepareStatement(queryBuilder.toString())) {
             
