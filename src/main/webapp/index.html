@@ -72,11 +72,25 @@
                             <option value="year_desc">Year Descending</option>
                         </select>
                     </div>
+                    <!-- Metascore Input -->
+                    <div class="col-md-3 form-group" id="metascoreDiv">
+                        <label for="min-metascore">Minimum Metascore:</label>
+                        <input type="number" id="min-metascore" class="form-control" placeholder="e.g. 50">
+                        <label for="max-metascore">Maximum Metascore:</label>
+                        <input type="number" id="max-metascore" class="form-control" placeholder="e.g. 90">
+                    </div>
+                    <!-- Year Input -->
+                    <div class="col-md-3 form-group" id="yearDiv">
+                        <label for="year">Min Year:</label>
+                        <input type="number" id="after-year" class="form-control" placeholder="e.g. 1995">
+                        <label for="year">Max Year:</label>
+                        <input type="number" id="before-year" class="form-control" placeholder="e.g. 2020">
+                    </div>
                     <!-- Submit and Show Games Buttons -->
                     <div class="col-md-3 form-group d-flex">
-                        <button id="scrapeDataBtn" class="btn btn-primary me-2">Scrape new Data</button>
-                        <button id="showDataBtn" class="btn btn-secondary">Show all data from DB</button>
-                        <button id="showFilteredDataBtn" class="btn btn-secondary">Show filtered data from DB</button>
+                        <button type="button" id="scrapeDataBtn" class="btn btn-primary me-2">Scrape new Data</button>
+                        <button type="button" id="showDataBtn" class="btn btn-secondary">Show all data from DB</button>
+                        <button type="button" id="showFilteredDataBtn" class="btn btn-secondary">Show filtered data from DB</button>
                     </div>
                 </div>
             </form>
@@ -95,6 +109,7 @@
                     TVsDB
                 </label>
                 <button type= "button" id= "dropTablesBtn">Drop Selected Tables</button>
+                <button type= "button" id= "simpleQueryBtn">Run Simple Query</button>
             </form>
             <div id= "results"></div>
             <div class= "container mt-5">

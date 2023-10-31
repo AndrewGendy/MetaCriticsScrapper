@@ -48,7 +48,7 @@ public class DatabaseHandler {
                             "releaseDate VARCHAR2(50), " +
                             "ratedScore VARCHAR2(50), " +
                             "originalURL VARCHAR2(1000), " +
-                            "metascore VARCHAR2(20), " +
+                            "metascore VARCHAR2(5), " +
                             "extraInfo VARCHAR2(1000))",
                     tableName);
             try (PreparedStatement pstmt = con.prepareStatement(createTableString)) {
@@ -93,6 +93,25 @@ public class DatabaseHandler {
         }
     }
 
+    public void simpleQuery(HttpServletResponse response) {
+        String sql = "SELECT releaseDate, TO_NUMBER(SUBSTR(releaseDate, -4)) AS ExtractedYear FROM agend932MediasDB";
+        
+        try (Connection con = getConnection();
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                String releaseDate = rs.getString("releaseDate");
+                int extractedYear = rs.getInt("ExtractedYear");
+                
+                handleError(response, "Release Date: " + releaseDate + ", Extracted Year: " + extractedYear);
+            }
+        } catch (SQLException e) {
+            handleError(response, "An error occurred while executing the simpleQuery: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     // Fetches all media data from the database
     public List<Media> fetchAllData(HttpServletResponse response) {
         List<Media> medias = new ArrayList<>();
@@ -127,7 +146,7 @@ public class DatabaseHandler {
     }
 
     // Fetches Filtered media data from the database
-    public List<Media> fetchFilteredData(HttpServletResponse response, String mediaType, String platform, String genre, String sortOption) {
+    public List<Media> fetchFilteredData(HttpServletResponse response, String mediaType, String platform, String genre, String sortOption, Integer minMetascore, Integer maxMetascore, String beforeYear, String afterYear) {
         List<Media> medias = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM agend932MediasDB WHERE 1=1"); // Always true condition to simplify appending below
         
@@ -141,29 +160,61 @@ public class DatabaseHandler {
         if (genre != null && !genre.isEmpty() && !genre.equalsIgnoreCase("ALL")) {
             queryBuilder.append(" AND UPPER(genre) = UPPER(?)");
         }
+        if (minMetascore != null) {
+            queryBuilder.append(" AND metascore >= ?");
+        }
+        if (maxMetascore != null) {
+            queryBuilder.append(" AND metascore >= ?");
+        }
+        if (beforeYear != null && !beforeYear.isEmpty()) {
+            queryBuilder.append(" AND TO_NUMBER(SUBSTR(releaseDate, -4)) <= ?");
+        }
+        if (afterYear != null && !afterYear.isEmpty()) {
+            queryBuilder.append(" AND TO_NUMBER(SUBSTR(releaseDate, -4)) >= ?");
+        }
         if ("metascore_asc".equals(sortOption)) {
             queryBuilder.append(" ORDER BY metascore ASC");
         } else if ("metascore_desc".equals(sortOption)) {
             queryBuilder.append(" ORDER BY metascore DESC");
         } else if ("year_asc".equals(sortOption)) {
-            queryBuilder.append(" ORDER BY releaseDate ASC");
+            queryBuilder.append(" ORDER BY TO_DATE(releaseDate, 'Mon DD, YYYY') ASC"); // convert to date format to fix the sorting problem I was running into
         } else if ("year_desc".equals(sortOption)) {
-            queryBuilder.append(" ORDER BY releaseDate DESC");
+            queryBuilder.append(" ORDER BY TO_DATE(releaseDate, 'Mon DD, YYYY') DESC"); // same as above lol
         }
+        // handleError(response, "Executing SQL: " + queryBuilder.toString()); // debugging
         try (Connection con = getConnection();
             PreparedStatement pstmt = con.prepareStatement(queryBuilder.toString())) {
             
             int paramIndex = 1;
             if (mediaType != null && !mediaType.isEmpty() && !mediaType.equalsIgnoreCase("ALL")) {
                 pstmt.setString(paramIndex++, mediaType);
+                // handleError(response, "Setting mediaType: " + mediaType);
             }
             if (platform != null && !platform.isEmpty() && !platform.equalsIgnoreCase("ALL")) {
                 pstmt.setString(paramIndex++, platform);
+                // handleError(response, "Setting platform: " + platform);
             }
             if (genre != null && !genre.isEmpty() && !genre.equalsIgnoreCase("ALL")) {
                 pstmt.setString(paramIndex++, genre);
+                // handleError(response, "Setting genre: " + genre);
             }
-            
+            if (minMetascore != null) {
+                pstmt.setInt(paramIndex++, minMetascore);
+                // handleError(response, "Setting minMetascore: " + minMetascore);
+            }
+            if (maxMetascore != null) {
+                pstmt.setInt(paramIndex++, maxMetascore);
+                // handleError(response, "Setting maxMetascore: " + maxMetascore);
+            }
+            if (beforeYear != null && !beforeYear.isEmpty()) {
+                pstmt.setString(paramIndex++, beforeYear);
+                // handleError(response, "Setting beforeYear: " + beforeYear);
+            }
+            if (afterYear != null && !afterYear.isEmpty()) {
+                pstmt.setString(paramIndex++, afterYear);
+                // handleError(response, "Setting afterYear: " + afterYear);
+            }
+
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
@@ -204,7 +255,7 @@ public class DatabaseHandler {
             PrintWriter out = response.getWriter();
             out.println(message);
         } catch (IOException ioEx) {
-            ioEx.printStackTrace();
+            // ioEx.printStackTrace();
         }
     }
 }

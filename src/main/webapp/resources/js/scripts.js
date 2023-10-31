@@ -23,20 +23,20 @@ $(document).ready(function () {
     //     }
     // });
 
-    const showLoader = function() {
+    const showLoader = function () {
         // Show the loader element
         loader.css('display', 'block');
     }
 
-    const hideLoader = function() {
+    const hideLoader = function () {
         // Hide the loader element
         loader.css('display', 'none');
     }
 
     // A generic function that handles the AJAX requests
-    const ajaxRequest = function(type, url, data, successCallback) {
+    const ajaxRequest = function (type, url, data, successCallback) {
         // Log the arguments of the ajaxRequest function
-        console.log("ajaxRequest called with type: ", type, "url: ", url, "data: ", data);
+        // console.log("ajaxRequest called with type: ", type, "url: ", url, "data: ", data);
 
         // Show the loader before making the request
         showLoader();
@@ -47,7 +47,7 @@ $(document).ready(function () {
             data: data,
             success: function (response) {
                 // Log the response from the server
-                console.log("AJAX Request succeeded with response: ", response);
+                // console.log("AJAX Request succeeded with response: ", response);
 
                 // Hide the loader after receiving the response
                 hideLoader();
@@ -73,10 +73,7 @@ $(document).ready(function () {
     $("#scrapeDataBtn").click(function (e) {
         e.preventDefault();
         // Log that the scrapeDataBtn was clicked
-        console.log("scrapeDataBtn clicked");
-        
-        // Clear previous data from the table
-        tableBody.innerHTML = '';
+        // console.log("scrapeDataBtn clicked");
 
         let sortOption = $("#sortOptions").val();
         let mediaType = $("#mediaType").val();
@@ -86,29 +83,22 @@ $(document).ready(function () {
         // Use the generic function with the appropriate arguments
         ajaxRequest("POST", "/phase2_Andrew-1.0/MetacriticServlet", { action: 'scrapeData', mediaType: mediaType, platform: platform, genre: genre }, function (response) {
             // Log that the response was received and display it in the results element
-            console.log("Response received from scrapeData action");
+            // console.log("Response received from scrapeData action");
             results.html(response);
             // After scraping, fetch the data based on the selected criteria and populate the table
-            ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchFilteredData', mediaType: mediaType, platform: platform, genre: genre, sort: sortOption }, function (data) {
-                // Log that the data was received and call populateResultsTable function with it
-                console.log("Filtered data received after scraping");
-                populateResultsTable(data);
-            });
+            $("#showFilteredDataBtn").click();
         });
     });
 
     $("#showDataBtn").click(function (e) {
         e.preventDefault();
         // Log that the showDataBtn was clicked
-        console.log("showDataBtn clicked");
-        
-        // Clear previous data from the table
-        tableBody.innerHTML = '';
+        // console.log("showDataBtn clicked");
 
         // Use the generic function with the appropriate arguments
         ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchAllData' }, function (data) {
             // Log that the data was received and call populateResultsTable function with it
-            console.log("Data received from fetchAllData action");
+            // console.log("Data received from fetchAllData action");
             populateResultsTable(data);
         });
     });
@@ -116,20 +106,22 @@ $(document).ready(function () {
     $("#showFilteredDataBtn").click(function (e) {
         e.preventDefault();
         // Log that the showFilteredDataBtn was clicked
-        console.log("showFilteredDataBtn clicked");
-
-        // Clear previous data from the table
-        tableBody.innerHTML = '';
+        // console.log("showFilteredDataBtn clicked");
 
         let sortOption = $("#sortOptions").val();
         let mediaType = $("#mediaType").val();
         let platform = $("#platforms").val();
         let genre = $("#genres").val();
+        let minMetascore = $("#min-metascore").val();
+        let maxMetascore = $("#max-metascore").val();
+        let beforeYear = $("#before-year").val();
+        let afterYear = $("#after-year").val();
 
         // Use the generic function with the appropriate arguments
-        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchFilteredData', mediaType: mediaType, platform: platform, genre: genre, sort: sortOption }, function (data) {
+        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchFilteredData', mediaType: mediaType, platform: platform, genre: genre,
+            sort: sortOption, minMetascore: minMetascore, maxMetascore: maxMetascore, beforeYear: beforeYear, afterYear: afterYear }, function (data) {
             // Log that the data was received and call populateResultsTable function with it
-            console.log("Data received from fetchFilteredData action");
+            // console.log("Data received from fetchFilteredData action");
             populateResultsTable(data);
         });
     });
@@ -137,10 +129,10 @@ $(document).ready(function () {
     $('#dropTablesBtn').click(function () {
 
         // Log that the dropTablesBtn was clicked
-        console.log("dropTablesBtn clicked");
+        // console.log("dropTablesBtn clicked");
 
         // Get all checked tableNames values
-        const tableNames = $('input[name="tableNames"]:checked').map(function() {
+        const tableNames = $('input[name="tableNames"]:checked').map(function () {
             return $(this).val();
         }).get();
 
@@ -148,11 +140,16 @@ $(document).ready(function () {
         ajaxRequest('POST', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'dropTables' }, function (response) {
             // Log that the tables were dropped and display a success message to the user
             // console.log("Tables dropped successfully.", response);
-            results.html("<p>Tables dropped successfully.</p>");
+            // results.html("<p>Tables dropped successfully.</p>");
         });
     });
 
-    $('#mediaType').change(function() {
+    $('#simpleQueryBtn').click(function () {
+        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'simpleQuery' }, function (response) {
+        });
+    });
+
+    $('#mediaType').change(function () {
         const mediaType = $(this).val();
         const platformsSelect = $('#platforms');
         const genresSelect = $('#genres');
@@ -194,11 +191,10 @@ $(document).ready(function () {
     });
 });
 
-const table = document.querySelector("#resultsTable");
-const tableBody = table.querySelector("tbody");
-
 function populateResultsTable(data) {
     // console.log("populateResultsTable got called");
+    const table = document.querySelector("#resultsTable");
+    const tableBody = table.querySelector("tbody");
 
     // Clear previous data from the table
     tableBody.innerHTML = '';

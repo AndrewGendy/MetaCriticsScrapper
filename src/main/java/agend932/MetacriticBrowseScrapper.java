@@ -36,7 +36,7 @@ public class MetacriticBrowseScrapper {
                 }
 
                 // After scraping the page, wait for 2 seconds before fetching the next page (to prevent hammering the website, and potentially getting my ip blocked)
-                Thread.sleep(2000);
+                Thread.sleep(20);
                 pageNumber++;
 
             } catch (IOException | InterruptedException e) {
