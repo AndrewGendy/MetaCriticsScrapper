@@ -23,14 +23,40 @@ body {
 
     animation: rotate360 2s linear infinite;
 
-    display: none; 
+    display: none;
 }
 
 @keyframes rotate360 {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .u-hidden {
     display: none;
+}
+
+.divider {
+    border: none;
+    height: 5px;
+    background-color: black;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#filtersSidebar {
+    position: -webkit-sticky; /*For Safari browser*/
+    position: sticky;
+    top: 25px; /*Set the distance from the top of the page */
+    z-index: 10;
+    height: 100%;
+}
+
+.footer {
+    border-top: 1px solid #eaeaea; /* A light border at the top of the footer for separation */
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* A subtle shadow for a slight floating effect */
 }

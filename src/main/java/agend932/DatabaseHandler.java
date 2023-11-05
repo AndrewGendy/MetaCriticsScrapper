@@ -12,17 +12,34 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * This class serves as the database handler for the Metacritic Scraper application.
+ * It provides functionality to establish database connections, execute queries, and manage database tables.
+ */
 public class DatabaseHandler {
 
     private static final String USERNAME = "agend932";
     private static final String PASSWORD = "W3jV5pXK";
     private static final String JDBC_URL = "jdbc:oracle:thin:@csdb.kutztown.edu:1521:orcl";
 
-    // Establishes a connection to the database
+    /**
+     * Establishes and returns a database connection using the configured credentials.
+     *
+     * @return A new instance of {@code Connection}.
+     * @throws SQLException If there is an error establishing the database connection.
+     */
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
     }
 
+    /**
+     * Checks if a specific table exists in the database.
+     *
+     * @param tableName The name of the table to check.
+     * @param con       The database connection to use.
+     * @return True if the table exists, false otherwise.
+     * @throws SQLException If there is an error executing the query.
+     */
     private boolean doesTableExist(String tableName, Connection con) throws SQLException {
         String checkTableExistsQuery = "SELECT COUNT(*) FROM user_tables WHERE table_name = ?";
         try (PreparedStatement pstmt = con.prepareStatement(checkTableExistsQuery)) {
@@ -35,6 +52,13 @@ public class DatabaseHandler {
         return false;
     }
 
+    /**
+     * Creates a new table in the database if it does not already exist.
+     *
+     * @param tableName The name of the table to create.
+     * @param con       The database connection to use.
+     * @throws SQLException If there is an error creating the table.
+     */
     private void createTableIfNotExists(String tableName, Connection con) throws SQLException {
         if (!doesTableExist(tableName, con)) {
             String createTableString = String.format(
@@ -57,7 +81,13 @@ public class DatabaseHandler {
         }
     }
 
-    // Saves the list of media to the database
+    /**
+     * Saves a list of media entries to the specified table in the database.
+     *
+     * @param tableName The name of the table where the media will be stored.
+     * @param mediaList A list of {@code Media} objects to be saved to the database.
+     * @param response  The HttpServletResponse object used for error handling.
+     */
     public void saveResultsToDB(String tableName, List<Media> mediaList, HttpServletResponse response) {
         try (Connection con = getConnection()) {
             createTableIfNotExists(tableName, con);
@@ -93,6 +123,11 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * Executes a simple query on the database for demonstration purposes and sends the results back to the client.
+     *
+     * @param response The HttpServletResponse object that contains the response the servlet sends to the client.
+     */
     public void simpleQuery(HttpServletResponse response) {
         String sql = "SELECT releaseDate, TO_NUMBER(SUBSTR(releaseDate, -4)) AS ExtractedYear FROM agend932MediasDB";
         
@@ -112,7 +147,12 @@ public class DatabaseHandler {
         }
     }
 
-    // Fetches all media data from the database
+    /**
+     * Fetches all media data from the database and returns it as a list.
+     *
+     * @param response The HttpServletResponse object used for error handling.
+     * @return A list of {@code Media} objects containing all the media data from the database.
+     */
     public List<Media> fetchAllData(HttpServletResponse response) {
         List<Media> medias = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM agend932MediasDB");
@@ -145,12 +185,29 @@ public class DatabaseHandler {
         return medias;
     }
 
-    // Fetches Filtered media data from the database
-    public List<Media> fetchFilteredData(HttpServletResponse response, String mediaType, String platform, String genre, String sortOption, Integer minMetascore, Integer maxMetascore, String beforeYear, String afterYear) {
+    /**
+     * Fetches filtered media data based on provided search criteria and returns it as a list.
+     *
+     * @param response      The HttpServletResponse object used for error handling.
+     * @param searchKeyword The keyword to filter by the title.
+     * @param mediaType     The media type to filter by.
+     * @param platform      The platform to filter by.
+     * @param genre         The genre to filter by.
+     * @param sortOption    The sorting option for the results.
+     * @param minMetascore  The minimum metascore for filtering results.
+     * @param maxMetascore  The maximum metascore for filtering results.
+     * @param beforeYear    The year before which the media was released for filtering results.
+     * @param afterYear     The year after which the media was released for filtering results.
+     * @return A list of {@code Media} objects containing the filtered media data from the database.
+     */
+    public List<Media> fetchFilteredData(HttpServletResponse response, String searchKeyword, String mediaType, String platform, String genre, String sortOption, Integer minMetascore, Integer maxMetascore, String beforeYear, String afterYear) {
         List<Media> medias = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM agend932MediasDB WHERE 1=1"); // Always true condition to simplify appending below
         
         // Check if mediaType is specified and not a special value like "ALL"
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            queryBuilder.append(" AND UPPER(title) like UPPER(?)");
+        }
         if (mediaType != null && !mediaType.isEmpty() && !mediaType.equalsIgnoreCase("ALL")) {
             queryBuilder.append(" AND UPPER(mediaType) = UPPER(?)");
         }
@@ -164,7 +221,7 @@ public class DatabaseHandler {
             queryBuilder.append(" AND metascore >= ?");
         }
         if (maxMetascore != null) {
-            queryBuilder.append(" AND metascore >= ?");
+            queryBuilder.append(" AND metascore <= ?");
         }
         if (beforeYear != null && !beforeYear.isEmpty()) {
             queryBuilder.append(" AND TO_NUMBER(SUBSTR(releaseDate, -4)) <= ?");
@@ -186,33 +243,29 @@ public class DatabaseHandler {
             PreparedStatement pstmt = con.prepareStatement(queryBuilder.toString())) {
             
             int paramIndex = 1;
+            if (searchKeyword != null && !searchKeyword.isEmpty()) {
+                pstmt.setString(paramIndex++, "%" + searchKeyword + "%");
+            }
             if (mediaType != null && !mediaType.isEmpty() && !mediaType.equalsIgnoreCase("ALL")) {
                 pstmt.setString(paramIndex++, mediaType);
-                // handleError(response, "Setting mediaType: " + mediaType);
             }
             if (platform != null && !platform.isEmpty() && !platform.equalsIgnoreCase("ALL")) {
                 pstmt.setString(paramIndex++, platform);
-                // handleError(response, "Setting platform: " + platform);
             }
             if (genre != null && !genre.isEmpty() && !genre.equalsIgnoreCase("ALL")) {
                 pstmt.setString(paramIndex++, genre);
-                // handleError(response, "Setting genre: " + genre);
             }
             if (minMetascore != null) {
                 pstmt.setInt(paramIndex++, minMetascore);
-                // handleError(response, "Setting minMetascore: " + minMetascore);
             }
             if (maxMetascore != null) {
                 pstmt.setInt(paramIndex++, maxMetascore);
-                // handleError(response, "Setting maxMetascore: " + maxMetascore);
             }
             if (beforeYear != null && !beforeYear.isEmpty()) {
                 pstmt.setString(paramIndex++, beforeYear);
-                // handleError(response, "Setting beforeYear: " + beforeYear);
             }
             if (afterYear != null && !afterYear.isEmpty()) {
                 pstmt.setString(paramIndex++, afterYear);
-                // handleError(response, "Setting afterYear: " + afterYear);
             }
 
             ResultSet rs = pstmt.executeQuery();
@@ -238,7 +291,9 @@ public class DatabaseHandler {
         return medias;
     }
 
-    // Drops the specified tables from the database
+    /**
+     * Drops the specified tables from the database.
+     */
     public void dropTables() {
         try (Connection con = getConnection();
             Statement stmt = con.createStatement()) {
@@ -249,13 +304,18 @@ public class DatabaseHandler {
         }
     }
 
-    // Handles errors by sending a response to the client
+    /**
+     * Handles errors by sending a response message to the client.
+     *
+     * @param response The HttpServletResponse object that contains the response the servlet sends to the client.
+     * @param message  The message to be sent to the client.
+     */
     private void handleError(HttpServletResponse response, String message) {
         try {
             PrintWriter out = response.getWriter();
             out.println(message);
         } catch (IOException ioEx) {
-            // ioEx.printStackTrace();
+            ioEx.printStackTrace();
         }
     }
 }

@@ -9,8 +9,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
+/**
+ * The {@code MetacriticServlet} class handles all the HTTP requests for the Metacritic Scraper application.
+ * It processes requests to scrape data from Metacritic, manage the database, and perform queries.
+ */
 public class MetacriticServlet extends HttpServlet {
 
+    /**
+     * Handles the HTTP GET requests.
+     * 
+     * @param request The HttpServletRequest object that contains the request the client made of the servlet.
+     * @param response The HttpServletResponse object that contains the response the servlet returns to the client.
+     * @throws ServletException If the request could not be handled.
+     * @throws IOException If an input or output error occurs while the servlet is handling the request.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,6 +47,14 @@ public class MetacriticServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Handles the HTTP POST requests.
+     * 
+     * @param request The HttpServletRequest object that contains the request the client made of the servlet.
+     * @param response The HttpServletResponse object that contains the response the servlet sends to the client.
+     * @throws ServletException If the request could not be handled.
+     * @throws IOException If an input or output error is detected when the servlet handles the POST request.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -56,18 +76,34 @@ public class MetacriticServlet extends HttpServlet {
         }
     }
 
-    // @Override
-    // public void destroy() {
-    //     // Call the dropTables function
-    //     dropTables();
-    //     // Call the parent destroy method (not mandatory but can be good practice)
-    //     super.destroy();
-    // }
+    /**
+     * Called by the server (via the {@code service} method) to allow a servlet to handle a POST request by dropping tables.
+     * The servlet container calls the {@code destroy} method before removing a servlet instance from service.
+     */
+    @Override
+    public void destroy() {
+        dropTables();
+        // Call the parent destroy method (not mandatory but can be good practice)
+        super.destroy();
+    }
 
+    /**
+     * Executes a simple query to the database for testing purposes.
+     * 
+     * @param response The HttpServletResponse object that contains the response the servlet sends to the client.
+     */
     private void simpleQuery(HttpServletResponse response){
         DatabaseHandler dbHandler = new DatabaseHandler();
         dbHandler.simpleQuery(response);
     }
+
+    /**
+     * Processes a request to scrape data from Metacritic based on parameters specified by the client.
+     * 
+     * @param request The HttpServletRequest object that contains the request the client made of the servlet.
+     * @param response The HttpServletResponse object that contains the response the servlet sends to the client.
+     * @throws IOException If an input or output error is detected when the servlet handles the request.
+     */
     private void processScrapeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String mediaType = request.getParameter("mediaType");
         String platform = request.getParameter("platform");
@@ -77,12 +113,12 @@ public class MetacriticServlet extends HttpServlet {
         if ("movie".equals(mediaType) || "tv".equals(mediaType)) {
             platformParam = "&network=";
         }
-        sendResponseMessage(response, "Processing scrape request for mediaType: " + mediaType + ", platform: " + platform + ", genre: " + genre);
+        // sendResponseMessage(response, "Processing scrape request for mediaType: " + mediaType + ", platform: " + platform + ", genre: " + genre);
 
         String queryType = "/browse/";
         String basePart = "all/all/all-time/metascore/?";
         String urlRequest = "https://www.metacritic.com" + queryType + mediaType + "/" + basePart + platformParam + platform + "&genre=" + genre + "&page=";
-        sendResponseMessage(response, "Constructed URL for scraping: " + urlRequest);
+        // sendResponseMessage(response, "Constructed URL for scraping: " + urlRequest);
         List<Media> scrapedMediaList = MetacriticBrowseScrapper.scrapeMetacritic(urlRequest, mediaType, platform, genre);
     
         // Save the scraped results to the database
@@ -91,6 +127,12 @@ public class MetacriticServlet extends HttpServlet {
         // sendResponseMessage(response, "Scraped and saved " + scrapedMediaList.size() + " media entries to the database.");
     }
 
+    /**
+     * Fetches all data stored in the database and sends it back to the client as a JSON array.
+     * 
+     * @param response The HttpServletResponse object that contains the response the servlet sends to the client.
+     * @throws IOException If an input or output error is detected when the servlet handles the request.
+     */
     private void fetchAllData(HttpServletResponse response) throws IOException {
         // sendResponseMessage(response, "Fetching all data from the database.");
         DatabaseHandler dbHandler = new DatabaseHandler();
@@ -102,7 +144,15 @@ public class MetacriticServlet extends HttpServlet {
         response.getWriter().write(json);
     }
 
+    /**
+     * Fetches filtered data based on search criteria provided by the client and sends it back as a JSON array.
+     * 
+     * @param request The HttpServletRequest object that contains the request the client made of the servlet.
+     * @param response The HttpServletResponse object that contains the response the servlet sends to the client.
+     * @throws IOException If an input or output error is detected when the servlet handles the request.
+     */
     private void fetchFilteredData(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String searchKeyword = request.getParameter("searchKeyword");
         String mediaType = request.getParameter("mediaType");
         String platform = request.getParameter("platform");
         String genre = request.getParameter("genre");
@@ -114,6 +164,7 @@ public class MetacriticServlet extends HttpServlet {
 
 
         // Check for null values and set to empty string if null
+        searchKeyword = (searchKeyword == null) ? "" : searchKeyword;
         mediaType = (mediaType == null) ? "" : mediaType;
         platform = (platform == null) ? "" : platform;
         genre = (genre == null) ? "" : genre;
@@ -121,7 +172,7 @@ public class MetacriticServlet extends HttpServlet {
         afterYear = (afterYear == null) ? "" : afterYear;
         
         DatabaseHandler dbHandler = new DatabaseHandler();
-        List<Media> mediaList = dbHandler.fetchFilteredData(response, mediaType, platform, genre, sortOption, minMetascore, maxMetascore, beforeYear, afterYear);
+        List<Media> mediaList = dbHandler.fetchFilteredData(response, searchKeyword, mediaType, platform, genre, sortOption, minMetascore, maxMetascore, beforeYear, afterYear);
 
         String json = new Gson().toJson(mediaList);
         response.setContentType("application/json");
@@ -129,18 +180,26 @@ public class MetacriticServlet extends HttpServlet {
         response.getWriter().write(json);
     }
 
+    /**
+     * Drops all tables from the database, typically invoked during the destruction phase of the servlet's lifecycle.
+     */
     private void dropTables() {
         DatabaseHandler dbHandler = new DatabaseHandler();
         dbHandler.dropTables();
     }
 
-    // Handles errors by sending a response to the client
+    /**
+     * Sends a plain text response message to the client.
+     * 
+     * @param response The HttpServletResponse object that contains the response the servlet sends to the client.
+     * @param message The string message to be sent to the client.
+     */
     private void sendResponseMessage(HttpServletResponse response, String message) {
         try {
             PrintWriter out = response.getWriter();
             out.println(message);
         } catch (IOException ioEx) {
-            // ioEx.printStackTrace();
+            ioEx.printStackTrace();
         }
     }
 }
