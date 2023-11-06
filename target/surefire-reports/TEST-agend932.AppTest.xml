@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="agend932.AppTest" time="0.047" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="agend932.AppTest" time="0.048" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="15"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/usr/java/jdk-15.0.1/lib"/>
-    <property name="sun.java.command" value="/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/surefire/surefirebooter5939959229982840722.jar /home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/surefire 2023-11-05T01-14-53_477-jvmRun1 surefire4719606371960206231tmp surefire_06915283139490732354tmp"/>
+    <property name="sun.java.command" value="/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/surefire/surefirebooter1357914515925691327.jar /home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/surefire 2023-11-06T00-09-35_257-jvmRun1 surefire204313851832845388tmp surefire_016821546110536781914tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/test-classes:/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/classes:/home/students.kutztown.edu/agend932/.m2/repository/junit/junit/4.11/junit-4.11.jar:/home/students.kutztown.edu/agend932/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/students.kutztown.edu/agend932/.m2/repository/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar:/home/students.kutztown.edu/agend932/.m2/repository/org/jsoup/jsoup/1.16.2/jsoup-1.16.2.jar:/home/students.kutztown.edu/agend932/.m2/repository/com/google/code/gson/gson/2.8.8/gson-2.8.8.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -27,7 +27,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/surefire/surefirebooter5939959229982840722.jar"/>
+    <property name="surefire.real.class.path" value="/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/surefire/surefirebooter1357914515925691327.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="15.0.1+9-18"/>
     <property name="user.name" value="agend932"/>

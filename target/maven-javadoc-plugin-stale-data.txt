@@ -1,0 +1,52 @@
+@options
+@packages
+-classpath
+'/home/students.kutztown.edu/agend932/.m2/repository/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar:/home/students.kutztown.edu/agend932/.m2/repository/org/jsoup/jsoup/1.16.2/jsoup-1.16.2.jar:/home/students.kutztown.edu/agend932/.m2/repository/com/google/code/gson/gson/2.8.8/gson-2.8.8.jar'
+-encoding
+'UTF-8'
+-private
+-source
+'1.7'
+-sourcepath
+'/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2023. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'phase2_Andrew 1.0 API'
+-linkoffline
+'https://docs.oracle.com/javase/7/docs/api' '/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'phase2_Andrew 1.0 API'
+agend932
+/home/students.kutztown.edu/agend932/.m2/repository/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar = 1698064614765
+/home/students.kutztown.edu/agend932/.m2/repository/org/jsoup/jsoup/1.16.2/jsoup-1.16.2.jar = 1698158587498
+/home/students.kutztown.edu/agend932/.m2/repository/com/google/code/gson/gson/2.8.8/gson-2.8.8.jar = 1698188974210
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/src/main/java = 1698382231675
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/element-list = 1699247217168
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/constant-values.html = 1699247217220
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/serialized-form.html = 1699247217239
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/overview-tree.html = 1699247217427
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/deprecated-list.html = 1699247217446
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/module-search-index.js = 1699247217511
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/package-search-index.js = 1699247217609
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/type-search-index.js = 1699247217626
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/member-search-index.js = 1699247217638
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/tag-search-index.js = 1699247217643
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/index-all.html = 1699247217664
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/allclasses-index.html = 1699247217690
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/allpackages-index.html = 1699247217697
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/index.html = 1699247217712
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/help-doc.html = 1699247217733
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/stylesheet.css = 1699247217744
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/script.js = 1699247217767
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/search.js = 1699247217786
+/home/students.kutztown.edu/agend932/public_html/csc521/MetaCriticsScrapper/target/site/apidocs/jquery-ui.overrides.css = 1699247218125

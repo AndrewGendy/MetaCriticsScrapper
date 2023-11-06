@@ -3,14 +3,17 @@ package agend932;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 /**
  * This class serves as the database handler for the Metacritic Scraper application.
@@ -18,18 +21,36 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DatabaseHandler {
 
-    private static final String USERNAME = "agend932";
-    private static final String PASSWORD = "W3jV5pXK";
-    private static final String JDBC_URL = "jdbc:oracle:thin:@csdb.kutztown.edu:1521:orcl";
+    private DataSource dataSource;
 
     /**
-     * Establishes and returns a database connection using the configured credentials.
-     *
-     * @return A new instance of {@code Connection}.
-     * @throws SQLException If there is an error establishing the database connection.
+     * Initializes a new DatabaseHandler object. It sets up the DataSource by looking up the JNDI context.
+     * It is assumed that the DataSource is configured with the name "jdbc/DatabaseConnectionConfiguration" in the web server context.
+     * This DataSource is then used to provide database connections throughout the application.
      */
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+    public DatabaseHandler() {
+        try {
+            Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:comp/env");
+            dataSource = (DataSource) envContext.lookup("jdbc/DatabaseConnectionConfiguration");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Obtains a database connection from the configured DataSource.
+     * This method is used internally to acquire connections for executing SQL operations.
+     *
+     * @return A Connection object to interact with the database, or null if a connection cannot be established.
+     */
+    private Connection getConnection() {
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

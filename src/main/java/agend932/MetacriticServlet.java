@@ -15,6 +15,20 @@ import com.google.gson.Gson;
  */
 public class MetacriticServlet extends HttpServlet {
 
+    private DatabaseHandler dbHandler;
+
+    /**
+     * Initializes the servlet. It retrieves the DataSource from the JNDI context and stores it for later use.
+     * This method is called automatically by the servlet container when the servlet is first loaded into memory.
+     *
+     * @throws ServletException if an error occurs during the initialization process.
+     */
+    @Override
+    public void init() throws ServletException {
+        // Create a new instance of DatabaseHandler using the context parameters
+        dbHandler = new DatabaseHandler();
+    }
+
     /**
      * Handles the HTTP GET requests.
      * 
@@ -77,7 +91,7 @@ public class MetacriticServlet extends HttpServlet {
     }
 
     /**
-     * Called by the server (via the {@code service} method) to allow a servlet to handle a POST request by dropping tables.
+     * Called by the server to allow a servlet to handle a POST request by dropping tables.
      * The servlet container calls the {@code destroy} method before removing a servlet instance from service.
      */
     @Override
@@ -93,7 +107,6 @@ public class MetacriticServlet extends HttpServlet {
      * @param response The HttpServletResponse object that contains the response the servlet sends to the client.
      */
     private void simpleQuery(HttpServletResponse response){
-        DatabaseHandler dbHandler = new DatabaseHandler();
         dbHandler.simpleQuery(response);
     }
 
@@ -122,7 +135,6 @@ public class MetacriticServlet extends HttpServlet {
         List<Media> scrapedMediaList = MetacriticBrowseScrapper.scrapeMetacritic(urlRequest, mediaType, platform, genre);
     
         // Save the scraped results to the database
-        DatabaseHandler dbHandler = new DatabaseHandler();
         dbHandler.saveResultsToDB("agend932MediasDB", scrapedMediaList, response);
         // sendResponseMessage(response, "Scraped and saved " + scrapedMediaList.size() + " media entries to the database.");
     }
@@ -135,7 +147,6 @@ public class MetacriticServlet extends HttpServlet {
      */
     private void fetchAllData(HttpServletResponse response) throws IOException {
         // sendResponseMessage(response, "Fetching all data from the database.");
-        DatabaseHandler dbHandler = new DatabaseHandler();
         List<Media> mediaList = dbHandler.fetchAllData(response);
 
         String json = new Gson().toJson(mediaList);
@@ -171,7 +182,6 @@ public class MetacriticServlet extends HttpServlet {
         beforeYear = (beforeYear == null) ? "" : beforeYear;
         afterYear = (afterYear == null) ? "" : afterYear;
         
-        DatabaseHandler dbHandler = new DatabaseHandler();
         List<Media> mediaList = dbHandler.fetchFilteredData(response, searchKeyword, mediaType, platform, genre, sortOption, minMetascore, maxMetascore, beforeYear, afterYear);
 
         String json = new Gson().toJson(mediaList);
@@ -181,10 +191,11 @@ public class MetacriticServlet extends HttpServlet {
     }
 
     /**
-     * Drops all tables from the database, typically invoked during the destruction phase of the servlet's lifecycle.
+     * Drops the database table used to store media information.
+     * This method is typically called when cleaning up resources during application undeployment or shutdown.
+     * It should be used with caution as it will result in loss of all data in the table.
      */
     private void dropTables() {
-        DatabaseHandler dbHandler = new DatabaseHandler();
         dbHandler.dropTables();
     }
 

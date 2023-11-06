@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource name="jdbc/DatabaseConnectionConfiguration" 
+              auth="Container"
+              type="javax.sql.DataSource"
+              username="agend932" 
+              password="W3jV5pXK"
+              driverClassName="oracle.jdbc.driver.OracleDriver"
+              url="jdbc:oracle:thin:@csdb.kutztown.edu:1521:orcl"
+              maxTotal="50"
+              maxIdle="30"
+              maxWaitMillis="10000"/>
+</Context>

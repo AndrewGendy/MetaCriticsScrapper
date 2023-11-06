@@ -94,68 +94,18 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <version>3.3.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-war-plugin</artifactId>
-          <version>3.2.1</version>
           <configuration> <!-- save the war file directory in the webapps dir instead of me copying it every time :) -->
             <outputDirectory>/home/students.kutztown.edu/agend932/webapps</outputDirectory> 
           </configuration>
         </plugin>
         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.0.0</version>
-            <executions>
-                <!-- git add . -->
-                <execution>
-                    <id>git-add</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>exec</goal>
-                    </goals>
-                    <configuration>
-                        <executable>git</executable>
-                        <arguments>
-                            <argument>add</argument>
-                            <argument>.</argument>
-                        </arguments>
-                    </configuration>
-                </execution>
-                <!-- git commit -->
-                <execution>
-                    <id>git-commit</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>exec</goal>
-                    </goals>
-                    <configuration>
-                        <executable>git</executable>
-                        <arguments>
-                            <argument>commit</argument>
-                            <argument>-m</argument>
-                            <argument>"Automated commit message"</argument>
-                        </arguments>
-                    </configuration>
-                </execution>
-                <!-- git push -->
-                <execution>
-                    <id>git-push</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>exec</goal>
-                    </goals>
-                    <configuration>
-                        <executable>git</executable>
-                        <arguments>
-                            <argument>push</argument>
-                            <argument>origin</argument>
-                            <argument>master</argument>
-                        </arguments>
-                    </configuration>
-                </execution>
-            </executions>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.3.1</version>
+          <configuration>
+            <show>private</show>
+            <additionalparam>-private</additionalparam>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>

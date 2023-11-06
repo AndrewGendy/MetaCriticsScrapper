@@ -49,7 +49,10 @@ $(document).ready(function () {
             type: type,
             url: url,
             data: data,
-            success: successCallback,
+            success: function (response) {
+                hideLoader();
+                successCallback(response);
+            },
             error: function (xhr, status, error) {
                 console.error("An error occurred in ajaxRequest function: ", error);
                 hideLoader();
