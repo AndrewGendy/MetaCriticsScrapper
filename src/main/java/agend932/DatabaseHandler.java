@@ -174,7 +174,7 @@ public class DatabaseHandler {
      * @param response The HttpServletResponse object used for error handling.
      * @return A list of {@code Media} objects containing all the media data from the database.
      */
-    public List<Media> fetchAllData(HttpServletResponse response) {
+    public List<Media> fetchAllData(HttpServletResponse response) { // could use dynamic table name just like in line 112, but at this point of writing the code I had made the decision to only use one table.
         List<Media> medias = new ArrayList<>();
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM agend932MediasDB");
         try (Connection con = getConnection();
@@ -223,7 +223,7 @@ public class DatabaseHandler {
      */
     public List<Media> fetchFilteredData(HttpServletResponse response, String searchKeyword, String mediaType, String platform, String genre, String sortOption, Integer minMetascore, Integer maxMetascore, String beforeYear, String afterYear) {
         List<Media> medias = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM agend932MediasDB WHERE 1=1"); // Always true condition to simplify appending below
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM agend932MediasDB WHERE 1=1"); // using WHERE 1=1 to make an always true condition to simplify appending below
         
         // Check if mediaType is specified and not a special value like "ALL"
         if (searchKeyword != null && !searchKeyword.isEmpty()) {

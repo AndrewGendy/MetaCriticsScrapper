@@ -1,0 +1,11 @@
+line numbers for showing all platforms and genres (not recommended to use when scrapping new data. It won't hurt when used to pull data from local DB):
+line 135, 143, 149, 164 in the scripts.js file (read comments)
+
+the line in the pom.xml to change the war output when using the command "mvn package":
+the output directory is configured at line 98. The plugin itself starts at line 93 ending at 100
+
+for security reasons (not to expose my username and password) I am using environment variables that gets loaded when the servlet is loaded (see line 27 in MetacriticServlet.java). It creates an instance of dbHandler which looksup the variables saved in the context.xml (see line 31 in DatabaseHandler.java). After getting the Database Configurations into dataSource, we then use it to make a connection (line 47).
+
+*Note* README on GitHub will always be the most up-to-date version.
+
+Since I removed javadoc from the servlet, it won't be located under "https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/javadoc" anymore. It is now accessible through acad public html: "https://unixweb.kutztown.edu/~agend932/csc521/MetaCriticsScrapper/javadoc"

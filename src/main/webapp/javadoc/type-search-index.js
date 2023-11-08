@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"agend932","l":"DatabaseHandler"},{"p":"agend932","l":"Media"},{"p":"agend932","l":"MetacriticBrowseScrapper"},{"p":"agend932","l":"MetacriticServlet"}];updateSearchResults();

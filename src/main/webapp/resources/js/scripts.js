@@ -5,6 +5,7 @@
 $(document).ready(function () {
     const loader = $('#loader');
     const results = $('#results');
+    const urlForAPI = '/phase2_Andrew/MetacriticServlet'; // create a variable instead of changing it in multiple places every time.
     updatePlatformAndGenreSelects() // to populate Platforms and Genres when page is refreashed.
 
     // // NOT USING THIS ANYMORE SINCE I AM NOT HIDING AND SHOWING DIVs IN THE HTML. I AM NOW KEEPING ONE DIC AND CHANGING IT USING JS
@@ -56,7 +57,7 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 console.error("An error occurred in ajaxRequest function: ", error);
                 hideLoader();
-                results.html("<p>An error occurred while processing your request.</p>");
+                results.html("<p>An error occurred while processing your request.<br/>Maybe the local table is empty. Try to scrape data first.</p>");
             }
         });
     };
@@ -67,7 +68,7 @@ $(document).ready(function () {
         let mediaType = $("#mediaType").val();
         let platform = $("#platforms").val();
         let genre = $("#genres").val();
-        ajaxRequest("POST", "/phase2_Andrew-1.0/MetacriticServlet", { action: 'scrapeData', mediaType: mediaType, platform: platform, genre: genre }, function (response) {
+        ajaxRequest("POST", urlForAPI, { action: 'scrapeData', mediaType: mediaType, platform: platform, genre: genre }, function (response) {
             results.html(response);
             $("#showFilteredDataBtn").click();
         });
@@ -75,7 +76,7 @@ $(document).ready(function () {
     // Event handler for the 'Show Data' button click
     $("#showDataBtn").click(function (e) {
         e.preventDefault();
-        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'fetchAllData' }, function (data) {
+        ajaxRequest('GET', urlForAPI, { action: 'fetchAllData' }, function (data) {
             populateResultsTable(data);
         });
     });
@@ -94,7 +95,7 @@ $(document).ready(function () {
         let beforeYear = $("#before-year").val();
         let afterYear = $("#after-year").val();
 
-        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', {
+        ajaxRequest('GET', urlForAPI, {
             action: 'fetchFilteredData', searchKeyword: searchKeyword, mediaType: mediaType, platform: platform, genre: genre,
             sort: sortOption, minMetascore: minMetascore, maxMetascore: maxMetascore, beforeYear: beforeYear, afterYear: afterYear
         }, function (data) {
@@ -107,13 +108,13 @@ $(document).ready(function () {
         const tableNames = $('input[name="tableNames"]:checked').map(function () {
             return $(this).val();
         }).get();
-        ajaxRequest('POST', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'dropTables' }, function (response) {
+        ajaxRequest('POST', urlForAPI, { action: 'dropTables' }, function (response) {
         });
     });
 
     // Event handler for the 'Simple Query' button click
     $('#simpleQueryBtn').click(function () {
-        ajaxRequest('GET', '/phase2_Andrew-1.0/MetacriticServlet', { action: 'simpleQuery' }, function (response) {
+        ajaxRequest('GET', urlForAPI, { action: 'simpleQuery' }, function (response) {
         });
     });
 
@@ -132,32 +133,36 @@ function updatePlatformAndGenreSelects() {
     genresSelect.empty(); // Clear current genres options
 
     if (mediaType === 'game') {
-        // platformsSelect.append('<option value=""></option>');
+        // platformsSelect.append('<option value=""></option>'); // uncomment this line if you want to give the user the ability to search for all games platforms (this feature will cause some problems. See the README file for more details)
         platformsSelect.append('<option value="PS5">PS5</option>');
         platformsSelect.append('<option value="Xbox-Series-X">Xbox Series X/S</option>');
         platformsSelect.append('<option value="Nintendo-Switch">Nintendo Switch</option>');
         platformsSelect.append('<option value="PC">PC</option>');
         platformsSelect.append('<option value="Mobile">Mobile</option>');
         platformsSelect.append('<option value="Xbox-One">Xbox One</option>');
-        // genresSelect.append('<option value=""></option>');
+        // more platforms options could be added here similar to the above append statements
+        // genresSelect.append('<option value=""></option>'); // uncomment this line if you want to give the user the ability to search for all games genres (this feature will cause some problems. See the README file for more details)
         genresSelect.append('<option value="Action">Action</option>');
         genresSelect.append('<option value="RPG">RPG</option>');
         genresSelect.append('<option value="Strategy">Strategy</option>');
         genresSelect.append('<option value="Survival">Survival</option>');
         genresSelect.append('<option value="Shooter">Shooter</option>');
+        // more gernes options could be added here similar to the above append statements
     } else if (mediaType === 'movie' || mediaType === 'tv') {
-        // platformsSelect.append('<option value=""></option>');
+        // platformsSelect.append('<option value=""></option>'); // uncomment this line if you want to give the user the ability to search for all movies and tvplatforms (this feature will cause some problems. See the README file for more details)
         platformsSelect.append('<option value="Netflix">Netflix</option>');
         platformsSelect.append('<option value="Hulu">Hulu</option>');
         platformsSelect.append('<option value="Starz">Starz</option>');
         platformsSelect.append('<option value="Disney-Plus">Disney+</option>');
         platformsSelect.append('<option value="Prime-Video">Prime Video</option>');
-        // genresSelect.append('<option value=""></option>');
+        // more platforms options could be added here similar to the above append statements
+        // genresSelect.append('<option value=""></option>'); // uncomment this line if you want to give the user the ability to search for all movies and tv genres (this feature will cause some problems. See the README file for more details)
         genresSelect.append('<option value="Action">Action</option>');
         genresSelect.append('<option value="Comedy">Comedy</option>');
         genresSelect.append('<option value="Drama">Drama</option>');
         genresSelect.append('<option value="Crime">Crime</option>');
         genresSelect.append('<option value="Family">Family</option>');
+        // more gernes options could be added here similar to the above append statements
     }
 }
 

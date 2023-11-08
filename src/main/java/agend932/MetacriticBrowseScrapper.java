@@ -55,7 +55,7 @@ public class MetacriticBrowseScrapper {
 
             } catch (HttpStatusException httpEx) {
                 if (httpEx.getStatusCode() == 404) {
-                    // This means no more pages are available (This should elemenate the infinite loop we got)
+                    // This should elemenate the infinite loop we got
                     hasResults = false;
                 } else {
                     httpEx.printStackTrace();
