@@ -13,16 +13,16 @@ The Metacritic Scraper is a web-based application that allows users to:
 
 ## Quick Links
 
-- **Project Landing Page**: [Metacritic Scraper Main Page](https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/)
-- **API Endpoint**: [API Endpoint](https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet)
-- **Javadoc Documentation**: [API Documentation](https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/javadoc)
+- **Project Landing Page**: [Metacritic Scraper Main Page](https://agend932.kutztown.edu:8443/phase2_Andrew/)
+- **API Endpoint**: [API Endpoint](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet)
+- **Javadoc Documentation**: [API Documentation](https://unixweb.kutztown.edu/~agend932/csc521/MetaCriticsScrapper/javadoc)
 - **Github Repository**: [Github Repo](https://github.com/AndrewGendy/MetaCriticsScrapper)
 
 ## Workflow
 
 1. **Data Scraping**: Initiated by the "Scrape New Data" command, the application fetches and processes relevant data from Metacritic based on user-defined media types, platforms, and genres.
    
-2. **Data Storage**: Post-scraping, the data is systematically stored in a relational database in one table that stores media type to later filter entries. ~~with separate tables for each media category (Games, Movies, TV)~~.
+2. **Data Storage**: Post-scraping, the data is systematically stored in a relational database in one table that stores media type to later filter entries. ~~with separate tables for each media category (Games, Movies, TV)~~ No Longer using different tables for each media type since the size of the data is good enough for one table.
 
 3. **Data Retrieval & Display**: After storing, the application immediately queries the database to retrieve and display the newly saved data attributes to the user. The retrieved data is presented in a structured format, allowing users to easily browse through the results.
 
@@ -30,11 +30,19 @@ The Metacritic Scraper is a web-based application that allows users to:
 
 To demonstrate the application's capabilities, here are some sample query strings to interact with the API:
 
-- **Fetch All Stored Data**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?action=fetchAllData)
+- **Fetch All Stored Data**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchAllData)
   
-- **Fetch All Movie Data**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?action=fetchFilteredData&mediaType=movie)
+- **Query the Top Rated Movies by Metacritic**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&mediaType=movie&sort=metascore_desc)
+
+- **Query PS5 Action Games and Sort Them by Metascore and Only Show Those That Have at Least 70 Score**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&searchKeyword=&mediaType=game&platform=PS5&genre=Action&minMetascore=70&sort=metascore_desc)
   
-- **Game Data for PS5 Platform, Action Genre**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/MetacriticServlet?action=fetchFilteredData&mediaType=game&platform=PS5&genre=action)
+- **Query the top rated Star Wars movies that were released after 2001**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&searchKeyword=Star%20Wars&mediaType=movie&sort=metascore_desc&afterYear=2001)
+  
+- **Query all of the PS5 Games and sort them by score**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&mediaType=game&platform=PS5&sort=metascore_desc)
+  
+- **Query all of the PC Games that were released after 2015 and sort them by score**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&mediaType=game&platform=PC&sort=metascore_desc&afterYear=2015)
+
+- **Query the top rated Star Wars titles that are in the Games genre**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&mediaType=game&sort=metascore_desc&searchKeyword=Star%20Wars)
 
 ## Design Decisions
 
@@ -96,6 +104,37 @@ The current iteration of the Metacritic Scraper, while functional and useful, co
 
 - **Title-Based Uniqueness**: The database is designed to ensure each title is unique to prevent data duplication. This leads to a situation where a media item with the same title but different genres or platforms may not be stored if one entry already exists. For example, if 'Star Wars' movies are first scraped and stored as 'action' genre on 'Disney+', a subsequent scrape for 'adventure' genre won't store 'Star Wars' movies again even if they also belong to the 'adventure' genre. Therefore, it won't show in the results table.
 
+## Additional Notes
+
+### Compilation Instructions
+To compile the project using Maven, use the Maven wrapper with the following command:
+`mvn package` or `mvn clean package` and `mvn clean install` should also work. Maven should automatically download and install dependencies and libraries required to build the project.
+
+### Script File References
+Specific lines in `scripts.js` for displaying all platforms and genres:
+(Note: Not recommended for scraping new data; suitable for pulling data from a local database)
+- Line 135
+- Line 143
+- Line 149
+- Line 164
+(Refer to comments within the file for more details.)
+
+### WAR Output Configuration in Maven
+To change the WAR output directory when using the `mvn package` command, modify the `pom.xml`:
+- Output directory configuration: Line 98
+- Relevant plugin configuration: Lines 93 to 101
+
+### Security and Environment Variables
+For security purposes, and to avoid exposing my username and password, I am utilizing environment variables. These are loaded when the servlet is initialized:
+- See line 27 in `MetacriticServlet.java` for servlet initialization.
+- Instance of `dbHandler` created, which looks up variables saved in `context.xml`: See line 31 in `DatabaseHandler.java`.
+- Database configurations are loaded into `dataSource`, and then used to make a connection: See line 47.
+
+### Javadoc Location Recently Changed
+Since I removed javadoc from the servlet, it won't be located under `https://agend932.kutztown.edu:8443/phase2_Andrew/javadoc` anymore as specified in older versions. It is now accessible through acad public html: `https://unixweb.kutztown.edu/~agend932/csc521/MetaCriticsScrapper/javadoc`
+
+*Note*: The README on GitHub will always be the most up-to-date version.
+
 ## Acknowledgements
 
-This project, developed by Andrew Gendy for CSC521 at Kutztown University, is currently in its first major release, version 1.0. I am open to feedback and questions and would like to extend my gratitude to all who take the time to explore the Metacritic Scraper.
+This project, developed by Andrew Gendy for CSC521 at Kutztown University. It is currently in its first major release, version 1.0.1 and I am open to all feedback and questions. I would like to extend my gratitude to all who take the time to explore the Metacritic Scraper.
