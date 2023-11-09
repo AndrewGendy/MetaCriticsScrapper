@@ -41,7 +41,6 @@ public class MetacriticServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        // sendResponseMessage(response, "doGet called with action: " + action);
         if (action == null) {
             sendResponseMessage(response, "Action parameter is missing or null.");
             return;
@@ -73,7 +72,6 @@ public class MetacriticServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        // sendResponseMessage(response, "doPost called with action: " + action);
         if (action == null) {
             sendResponseMessage(response, "Action parameter is missing or null.");
             return;
@@ -126,17 +124,14 @@ public class MetacriticServlet extends HttpServlet {
         if ("movie".equals(mediaType) || "tv".equals(mediaType)) {
             platformParam = "&network=";
         }
-        // sendResponseMessage(response, "Processing scrape request for mediaType: " + mediaType + ", platform: " + platform + ", genre: " + genre);
 
         String queryType = "/browse/";
         String basePart = "all/all/all-time/metascore/?";
         String urlRequest = "https://www.metacritic.com" + queryType + mediaType + "/" + basePart + platformParam + platform + "&genre=" + genre + "&page=";
-        // sendResponseMessage(response, "Constructed URL for scraping: " + urlRequest);
         List<Media> scrapedMediaList = MetacriticBrowseScrapper.scrapeMetacritic(urlRequest, mediaType, platform, genre);
     
         // Save the scraped results to the database
         dbHandler.saveResultsToDB("agend932MediasDB", scrapedMediaList, response);
-        // sendResponseMessage(response, "Scraped and saved " + scrapedMediaList.size() + " media entries to the database.");
     }
 
     /**
@@ -146,7 +141,6 @@ public class MetacriticServlet extends HttpServlet {
      * @throws IOException If an input or output error is detected when the servlet handles the request.
      */
     private void fetchAllData(HttpServletResponse response) throws IOException {
-        // sendResponseMessage(response, "Fetching all data from the database.");
         List<Media> mediaList = dbHandler.fetchAllData(response);
 
         String json = new Gson().toJson(mediaList);
