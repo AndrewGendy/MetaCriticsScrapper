@@ -8,7 +8,7 @@ $(document).ready(function () {
     const urlForAPI = '/phase2_Andrew/MetacriticServlet'; // create a variable instead of changing it in multiple places every time.
     updatePlatformAndGenreSelects() // to populate Platforms and Genres when page is refreashed.
 
-    // // NOT USING THIS ANYMORE SINCE I AM NOT HIDING AND SHOWING DIVs IN THE HTML. I AM NOW KEEPING ONE DIC AND CHANGING IT USING JS
+    // // NOT USING THIS ANYMORE SINCE I AM NOT HIDING AND SHOWING DIVs IN THE HTML. I AM NOW KEEPING ONE DIV AND CHANGING IT USING JS
     // const platformsDiv = $('#platformsDiv');
     // const genresDiv = $('#genresDiv');
     // function toggleGameSections(display) {

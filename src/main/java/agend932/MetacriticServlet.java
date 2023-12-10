@@ -184,6 +184,37 @@ public class MetacriticServlet extends HttpServlet {
         response.getWriter().write(json);
     }
 
+    /* A new, better, and more modular way to extrat parameters from the request. I need to test it more, but it should work.
+    private String getParameter(HttpServletRequest request, String name) {
+        String value = request.getParameter(name);
+        return value != null ? value : "";
+    }
+    
+    private Integer getIntegerParameter(HttpServletRequest request, String name) {
+        String value = request.getParameter(name);
+        return (value != null && !value.isEmpty()) ? Integer.parseInt(value) : null;
+    }
+    
+    private void fetchFilteredData(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String searchKeyword = getParameter(request, "searchKeyword");
+        String mediaType = getParameter(request, "mediaType");
+        String platform = getParameter(request, "platform");
+        String genre = getParameter(request, "genre");
+        String sortOption = getParameter(request, "sort");
+        Integer minMetascore = getIntegerParameter(request, "minMetascore");
+        Integer maxMetascore = getIntegerParameter(request, "maxMetascore");
+        String beforeYear = getParameter(request, "beforeYear");
+        String afterYear = getParameter(request, "afterYear");
+    
+        List<Media> mediaList = dbHandler.fetchFilteredData(response, searchKeyword, mediaType, platform, genre, sortOption, minMetascore, maxMetascore, beforeYear, afterYear);
+    
+        String json = new Gson().toJson(mediaList);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json);
+    }
+    */
+
     /**
      * Drops the database table used to store media information.
      * This method is typically called when cleaning up resources during application undeployment or shutdown.

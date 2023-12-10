@@ -105,7 +105,8 @@
           <version>3.3.1</version>
           <configuration>
             <show>private</show>
-            <additionalparam>-private</additionalparam>
+            <additionalparam>-private</additionalparam> <!-- I am using mvn to build the javadoc, and this line tells it to include private classes-->
+            <outputDirectory>${project.basedir}/javadoc</outputDirectory> <!-- telling mvn where to put the javadoc (normally it's in target/site/apidocs). If it doesn't work, maybe I have to specify absolute path. Not tested yet -->
           </configuration>
         </plugin>
       </plugins>
