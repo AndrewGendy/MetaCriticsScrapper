@@ -3,6 +3,7 @@ package agend932;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Arrays;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +42,10 @@ public class MetacriticServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        String origin = request.getHeader("Origin");
+        if (origin != null && isAllowedOrigin(origin)) {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+        }
         if (action == null) {
             sendResponseMessage(response, "Action parameter is missing or null.");
             return;
@@ -59,7 +64,7 @@ public class MetacriticServlet extends HttpServlet {
                 sendResponseMessage(response, "Invalid action in doGet.");
         }
     }
-
+    
     /**
      * Handles the HTTP POST requests.
      * 
@@ -72,6 +77,10 @@ public class MetacriticServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        String origin = request.getHeader("Origin");
+        if (origin != null && isAllowedOrigin(origin)) {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+        }
         if (action == null) {
             sendResponseMessage(response, "Action parameter is missing or null.");
             return;
@@ -88,6 +97,10 @@ public class MetacriticServlet extends HttpServlet {
         }
     }
 
+    private boolean isAllowedOrigin(String origin) {
+        List<String> allowedOrigins = Arrays.asList("https://unixweb.kutztown.edu");
+        return allowedOrigins.contains(origin);
+    }
     /**
      * Called by the server to allow a servlet to handle a POST request by dropping tables.
      * The servlet container calls the {@code destroy} method before removing a servlet instance from service.
