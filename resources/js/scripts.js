@@ -5,7 +5,7 @@
 $(document).ready(function () {
     const loader = $('#loader');
     const results = $('#results');
-    const urlForAPI = 'https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet'; // create a variable instead of changing it in multiple places every time.
+    const urlForAPI = 'https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet'; // create a variable instead of changing it in multiple places every time.
     updatePlatformAndGenreSelects() // to populate Platforms and Genres when page is refreashed.
 
     // // NOT USING THIS ANYMORE SINCE I AM NOT HIDING AND SHOWING DIVs IN THE HTML. I AM NOW KEEPING ONE DIV AND CHANGING IT USING JS

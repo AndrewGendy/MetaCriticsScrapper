@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>agend932</groupId>
-  <artifactId>phase2_Andrew</artifactId>
+  <artifactId>Metacritic</artifactId>
   <version>1.0.1</version>
   <packaging>war</packaging>
 
-  <name>phase2_Andrew</name>
-  <url>https://agend932.kutztown.edu:8443/phase2_Andrew-1.0/index.html</url>
+  <name>Metacritic</name>
+  <url>https://unixweb.kutztown.edu/~agend932/csc521/Metacritic/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -96,7 +96,7 @@
           <version>3.3.1</version>
           <configuration>
             <outputDirectory>/home/students.kutztown.edu/agend932/webapps</outputDirectory> <!-- save the war file directory in the webapps dir instead of me copying it every time :) -->
-            <warName>phase2_Andrew</warName> <!-- if you want a custom name. otherwise delete this line -->
+            <warName>Metacritic</warName> <!-- if you want a custom name. otherwise delete this line -->
           </configuration>
         </plugin>
         <plugin>
