@@ -6,28 +6,8 @@ $(document).ready(function () {
     const loader = $('#loader');
     const results = $('#results');
     const urlForAPI = 'https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet'; // create a variable instead of changing it in multiple places every time.
+    // const urlForAPI = 'http://localhost:8080/Metacritic/MetacriticServlet'; // for local testing.
     updatePlatformAndGenreSelects() // to populate Platforms and Genres when page is refreashed.
-
-    // // NOT USING THIS ANYMORE SINCE I AM NOT HIDING AND SHOWING DIVs IN THE HTML. I AM NOW KEEPING ONE DIV AND CHANGING IT USING JS
-    // const platformsDiv = $('#platformsDiv');
-    // const genresDiv = $('#genresDiv');
-    // function toggleGameSections(display) {
-    //     // Change the display values of the game sections
-    //     gamePlatformsDiv.css('display', display);
-    //     gameGenresDiv.css('display', display);
-    // }
-
-    // $('#mediaType').on('change', function () {
-    //     // Log the value of the mediaType input
-    //     console.log("mediaType changed to: ", this.value);
-
-    //     // Toggle the game sections based on the mediaType value
-    //     if (this.value === 'game') {
-    //         toggleGameSections('block');
-    //     } else {
-    //         toggleGameSections('none');
-    //     }
-    // });
 
     // Show or hide the loader graphic
     const showLoader = function () {

@@ -137,4 +137,4 @@ Since I removed javadoc from the servlet, it won't be located under `https://age
 
 ## Acknowledgements
 
-This project, developed by Andrew Gendy for CSC521 at Kutztown University. It is currently in its first major release, version 1.0.1 and I am open to all feedback and questions. I would like to extend my gratitude to all who take the time to explore the Metacritic Scraper.
+This project, developed by Andrew Gendy for CSC521 at Kutztown University. It is currently in its first major release, version 1.1.3 and I am open to all feedback and questions. I would like to extend my gratitude to all who take the time to explore the Metacritic Scraper.

@@ -6,16 +6,17 @@
 
   <groupId>agend932</groupId>
   <artifactId>Metacritic</artifactId>
-  <version>1.0.1</version>
+  <version>1.1.3</version>
   <packaging>war</packaging>
 
   <name>Metacritic</name>
   <url>https://unixweb.kutztown.edu/~agend932/csc521/Metacritic/</url>
+  <!-- <url>http://localhost:8080/Metacritic/</url> -->
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -95,8 +96,9 @@
           <artifactId>maven-war-plugin</artifactId>
           <version>3.3.1</version>
           <configuration>
-            <outputDirectory>/home/students.kutztown.edu/agend932/webapps</outputDirectory> <!-- save the war file directory in the webapps dir instead of me copying it every time :) -->
-            <warName>Metacritic</warName> <!-- if you want a custom name. otherwise delete this line -->
+            <outputDirectory>/home/students.kutztown.edu/agend932/webapps</outputDirectory>
+            <!-- <outputDirectory>F:/Studies/Kutztown/CSC521 - WebBased Client Serv Soft Dev/apache-tomcat-10.1.16/webapps</outputDirectory> -->
+            <warName>Metacritic</warName>
           </configuration>
         </plugin>
         <plugin>
