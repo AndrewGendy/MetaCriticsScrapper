@@ -8,7 +8,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
+
+import agend932.beans.Media;
 
 /**
  * The {@code MetacriticServlet} class handles all the HTTP requests for the Metacritic Scraper application.
@@ -60,6 +63,9 @@ public class MetacriticServlet extends HttpServlet {
             case "simpleQuery":
                 simpleQuery(response);
                 break;
+            case "checkLogin":
+                checkLoginStatus(request, response);
+                break;
             default:
                 sendResponseMessage(response, "Invalid action in doGet.");
         }
@@ -91,6 +97,12 @@ public class MetacriticServlet extends HttpServlet {
                 break;
             case "scrapeData":
                 processScrapeRequest(request, response);
+                break;
+            case "login":
+                handleLogin(request, response);
+                break;
+            case "logout":
+                handleLogout(request, response);
                 break;
             default:
                 sendResponseMessage(response, "Invalid action in doPost.");
@@ -251,4 +263,55 @@ public class MetacriticServlet extends HttpServlet {
             ioEx.printStackTrace();
         }
     }
+
+    /**
+     * Checks the login status of the user.
+     * 
+     * @param request  the HttpServletRequest object
+     * @param response the HttpServletResponse object
+     * @throws IOException if an I/O error occurs
+     */
+    private void checkLoginStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new Gson().toJson(username));
+    }
+
+    /**
+     * Handles the login functionality.
+     * Redirects the user to landing page.
+     * 
+     * @param request The HttpServletRequest object containing the request information.
+     * @param response The HttpServletResponse object used to send the response.
+     * @throws IOException If an I/O error occurs.
+     */
+    private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String username = request.getParameter("username");
+        if(username != null && !username.trim().isEmpty()) {
+            HttpSession session = request.getSession();
+            session.setAttribute("username", username);
+            session.setMaxInactiveInterval(30 * 24 * 60 * 60); // Set the session to expire in 30 days
+        }
+        response.sendRedirect("https://unixweb.kutztown.edu/~agend932/csc521/Metacritic/index.html"); // Redirect to the landing page after login
+    }
+
+    /**
+     * Handles the logout functionality.
+     * Invalidates the current session if it exists.
+     *
+     * @param request  the HttpServletRequest object
+     * @param response the HttpServletResponse object
+     * @throws IOException if an I/O error occurs
+     */
+    private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        //response.sendRedirect("login.jsp"); // Redirect to login page or handle as needed
+    }
 }
+

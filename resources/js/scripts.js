@@ -41,6 +41,34 @@ $(document).ready(function () {
             }
         });
     };
+    
+    checkLoginStatus(); // Run this function when the page loads to check if the user is logged in or not
+
+    // Check if the user is logged in or not
+    function checkLoginStatus() {
+        ajaxRequest('GET', urlForAPI, { action: 'checkLogin' }, function(response) {
+            if (response) {
+                // User is logged in
+                $('#loginBtn').hide();
+                $('#logoutBtn').show();
+                $('#logoutBtn').before('<span id="welcomeUser">Welcome, ' + response + '</span> ');
+            } else {
+                // User is not logged in
+                $('#loginBtn').show();
+                $('#logoutBtn').hide();
+                $('#welcomeUser').remove();
+            }
+        });
+    }
+
+    // Event handler for the 'Logout' button click
+    $("#logoutBtn").click(function(e) {
+        e.preventDefault();
+        ajaxRequest('POST', urlForAPI, { action: 'logout' }, function(response) {
+            // If need be, handle the response after logout
+            checkLoginStatus(); // Recheck login status to update UI
+        });
+    });
 
     // Event handler for the 'Scrape Data' button click
     $("#scrapeDataBtn").click(function (e) {

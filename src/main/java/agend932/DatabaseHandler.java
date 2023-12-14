@@ -15,6 +15,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import agend932.beans.Media;
+
 /**
  * This class serves as the database handler for the Metacritic Scraper application.
  * It provides functionality to establish database connections, execute queries, and manage database tables.
@@ -182,20 +184,38 @@ public class DatabaseHandler {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                Media media = new Media(
-                        rs.getString("mediaType"),
-                        rs.getString("pictureUrl"),
-                        rs.getString("title"),
-                        rs.getString("description"),
-                        rs.getString("platform"),
-                        rs.getString("genre"),
-                        rs.getString("releaseDate"),
-                        rs.getString("ratedScore"),
-                        rs.getString("originalURL"),
-                        rs.getString("metascore"),
-                        rs.getString("extraInfo"));
+                Media media = new Media();
+                media.setMediaType(rs.getString("mediaType"));
+                media.setPictureUrl(rs.getString("pictureUrl"));
+                media.setTitle(rs.getString("title"));
+                media.setDescription(rs.getString("description"));
+                media.setPlatform(rs.getString("platform"));
+                media.setGenre(rs.getString("genre"));
+                media.setReleaseDate(rs.getString("releaseDate"));
+                media.setRatedScore(rs.getString("ratedScore"));
+                media.setOriginalURL(rs.getString("originalURL"));
+                media.setMetascore(rs.getString("metascore"));
+                media.setExtraInfo(rs.getString("extraInfo"));
+    
                 medias.add(media);
             }
+            // Using the setters above instead of the constructor below because I updated the Media class to a JavaBean that use getters and setters instead of a constructor
+
+            // while (rs.next()) {
+            //     Media media = new Media(
+            //             rs.getString("mediaType"),
+            //             rs.getString("pictureUrl"),
+            //             rs.getString("title"),
+            //             rs.getString("description"),
+            //             rs.getString("platform"),
+            //             rs.getString("genre"),
+            //             rs.getString("releaseDate"),
+            //             rs.getString("ratedScore"),
+            //             rs.getString("originalURL"),
+            //             rs.getString("metascore"),
+            //             rs.getString("extraInfo"));
+            //     medias.add(media);
+            // }
         } catch (SQLException e) {
             if (e.getErrorCode() == 942) {
                 handleError(response, "There is no table in the DB with that name. Code: " + e.getMessage());
@@ -291,21 +311,40 @@ public class DatabaseHandler {
 
             ResultSet rs = pstmt.executeQuery();
             
+            
             while (rs.next()) {
-                Media media = new Media(
-                        rs.getString("mediaType"),
-                        rs.getString("pictureUrl"),
-                        rs.getString("title"),
-                        rs.getString("description"),
-                        rs.getString("platform"),
-                        rs.getString("genre"),
-                        rs.getString("releaseDate"),
-                        rs.getString("ratedScore"),
-                        rs.getString("originalURL"),
-                        rs.getString("metascore"),
-                        rs.getString("extraInfo"));
+                Media media = new Media();
+                media.setMediaType(rs.getString("mediaType"));
+                media.setPictureUrl(rs.getString("pictureUrl"));
+                media.setTitle(rs.getString("title"));
+                media.setDescription(rs.getString("description"));
+                media.setPlatform(rs.getString("platform"));
+                media.setGenre(rs.getString("genre"));
+                media.setReleaseDate(rs.getString("releaseDate"));
+                media.setRatedScore(rs.getString("ratedScore"));
+                media.setOriginalURL(rs.getString("originalURL"));
+                media.setMetascore(rs.getString("metascore"));
+                media.setExtraInfo(rs.getString("extraInfo"));
+    
                 medias.add(media);
             }
+            // Using the setters above instead of the constructor below because I updated the Media class to a JavaBean that use getters and setters instead of a constructor
+            
+            // while (rs.next()) {
+            //     Media media = new Media(
+            //             rs.getString("mediaType"),
+            //             rs.getString("pictureUrl"),
+            //             rs.getString("title"),
+            //             rs.getString("description"),
+            //             rs.getString("platform"),
+            //             rs.getString("genre"),
+            //             rs.getString("releaseDate"),
+            //             rs.getString("ratedScore"),
+            //             rs.getString("originalURL"),
+            //             rs.getString("metascore"),
+            //             rs.getString("extraInfo"));
+            //     medias.add(media);
+            // }
         } catch (SQLException e) {
             handleError(response, "An error occurred while fetching filtered data: " + e.getMessage());
         }

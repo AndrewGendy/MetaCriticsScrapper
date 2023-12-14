@@ -13,9 +13,9 @@ The Metacritic Scraper is a web-based application that allows users to:
 
 ## Quick Links
 
-- **Project Landing Page**: [Metacritic Scraper Main Page](https://agend932.kutztown.edu:8443/phase2_Andrew/)
-- **API Endpoint**: [API Endpoint](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet)
-- **Javadoc Documentation**: [API Documentation](https://unixweb.kutztown.edu/~agend932/csc521/MetaCriticsScrapper/javadoc)
+- **Project Landing Page**: [Metacritic Scraper Main Page](https://unixweb.kutztown.edu/~agend932/csc521/Metacritic/)
+- **API Endpoint**: [API Endpoint](https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet)
+- **Javadoc Documentation**: [API Documentation](https://unixweb.kutztown.edu/~agend932/csc521/Metacritic/javadoc)
 - **Github Repository**: [Github Repo](https://github.com/AndrewGendy/MetaCriticsScrapper)
 
 ## Workflow
@@ -30,19 +30,19 @@ The Metacritic Scraper is a web-based application that allows users to:
 
 To demonstrate the application's capabilities, here are some sample query strings to interact with the API:
 
-- **Fetch All Stored Data**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchAllData)
+- **Fetch All Stored Data**: [Sample Link](https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet?action=fetchAllData)
   
-- **Query the Top Rated Movies by Metacritic**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&mediaType=movie&sort=metascore_desc)
+- **Query the Top Rated Movies by Metacritic**: [Sample Link](https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet?action=fetchFilteredData&mediaType=movie&sort=metascore_desc)
 
-- **Query PS5 Action Games and Sort Them by Metascore and Only Show Those That Have at Least 70 Score**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&searchKeyword=&mediaType=game&platform=PS5&genre=Action&minMetascore=70&sort=metascore_desc)
+- **Query PS5 Action Games and Sort Them by Metascore and Only Show Those That Have at Least 70 Score**: [Sample Link](https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet?action=fetchFilteredData&searchKeyword=&mediaType=game&platform=PS5&genre=Action&minMetascore=70&sort=metascore_desc)
   
-- **Query the top rated Star Wars movies that were released after 2001**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&searchKeyword=Star%20Wars&mediaType=movie&sort=metascore_desc&afterYear=2001)
+- **Query the top rated Star Wars movies that were released after 2001**: [Sample Link](https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet?action=fetchFilteredData&searchKeyword=Star%20Wars&mediaType=movie&sort=metascore_desc&afterYear=2001)
   
-- **Query all of the PS5 Games and sort them by score**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&mediaType=game&platform=PS5&sort=metascore_desc)
+- **Query all of the PS5 Games and sort them by score**: [Sample Link](https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet?action=fetchFilteredData&mediaType=game&platform=PS5&sort=metascore_desc)
   
-- **Query all of the PC Games that were released after 2015 and sort them by score**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&mediaType=game&platform=PC&sort=metascore_desc&afterYear=2015)
+- **Query all of the PC Games that were released after 2015 and sort them by score**: [Sample Link](https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet?action=fetchFilteredData&mediaType=game&platform=PC&sort=metascore_desc&afterYear=2015)
 
-- **Query the top rated Star Wars titles that are in the Games genre**: [Sample Link](https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet?action=fetchFilteredData&mediaType=game&sort=metascore_desc&searchKeyword=Star%20Wars)
+- **Query the top rated Star Wars titles that are in the Games genre**: [Sample Link](https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet?action=fetchFilteredData&mediaType=game&sort=metascore_desc&searchKeyword=Star%20Wars)
 
 ## Design Decisions
 
@@ -68,17 +68,18 @@ The application adheres to the Model-View-Controller (MVC) architecture, ensurin
    
 2. **Select Criteria**: Use the dropdown menus to specify your criteria.
    
-3. **Scrape**: Click "Scrape New Data" to initiate the scraping process. A brief wait is required.
+3. **Scrape**: Click "Search Results" to initiate the scraping process. A brief wait is required.
    
 4. **View All Data**: Click "All Local Data" to see all the data that has been stored in the local database so far.
 
 5. **View Filtered Data**: 
-   - Select your desired criteria using the dropdown menus.
-   - Click "Filter Local Data" to view data that matches your selected criteria. The results will be displayed on the page. This data will be pulled from the local database which only saves data that has been scrapped earlier in the session.
+   ~~- Select your desired criteria using the dropdown menus.~~
+   ~~- Click "Filter Local Data" to view data that matches your selected criteria. The results will be displayed on the page. This data will be pulled from the local database which only saves data that has been scrapped earlier in the session.~~
+   - This is now part of the Search Results button functionality, and gets triggered automatically. The "Filter Local Data" has been removed.
 
 6. **View Data**: The results will automatically be displayed on the page no matter which option you chose.
    
-7. **Drop Selected Tables**: ~~Use checkboxes to select tables and click "Drop Selected Tables" for removal. (Deprecated Functionality)~~  The database table will be dropped automatically when the servlet is unloaded.
+7. **Drop Selected Tables**: The database table will be dropped automatically when the servlet is unloaded. There is also a "Drop Tables" button that allows the user to drop the tables upon request.
 
 ## Considerations & Limitations
 
@@ -131,10 +132,18 @@ For security purposes, and to avoid exposing my username and password, I am util
 - Database configurations are loaded into `dataSource`, and then used to make a connection: See line 47.
 
 ### Javadoc Location Recently Changed
-Since I removed javadoc from the servlet, it won't be located under `https://agend932.kutztown.edu:8443/phase2_Andrew/javadoc` anymore as specified in older versions. It is now accessible through acad public html: `https://unixweb.kutztown.edu/~agend932/csc521/MetaCriticsScrapper/javadoc`
+Since I removed javadoc from the servlet, it won't be located under `https://agend932.kutztown.edu:8443/Metacritic/javadoc` anymore as specified in older versions. It is now accessible through acad public html: `https://unixweb.kutztown.edu/~agend932/csc521/Metacritic/javadoc`
 
 *Note*: The README on GitHub will always be the most up-to-date version.
 
 ## Acknowledgements
 
 This project, developed by Andrew Gendy for CSC521 at Kutztown University. It is currently in its first major release, version 1.1.3 and I am open to all feedback and questions. I would like to extend my gratitude to all who take the time to explore the Metacritic Scraper.
+
+### What's new in 1.1.3
+- Merged the functionality of "Scrape New Data" and "Filter Local Data" into one button that does both. The new button is called "Search Results" and will show information to the user according to their search criteria.
+- Added a new button "Drop Tables" that will drop the database tables manually. This is an addition to the automatic method used to drop the tables when the servlet is unloaded.
+- Moved front-end items outside of the servlet to a different domain.
+- Updated API url from `https://agend932.kutztown.edu:8443/phase2_Andrew/MetacriticServlet` to `https://agend932.kutztown.edu:8443/Metacritic/MetacriticServlet`
+- Added CORS (Cross-Origin Resource Sharing) support to allow the communication between the landing page and the servlet which are being hosted on different domains.
+- 

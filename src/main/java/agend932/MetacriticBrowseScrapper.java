@@ -10,6 +10,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.jsoup.HttpStatusException;
 
+import agend932.beans.Media;
+
 /**
  * This class contains methods for scraping media information from Metacritic's website.
  * It uses Jsoup to parse HTML and extract media details.
@@ -75,25 +77,44 @@ public class MetacriticBrowseScrapper {
         return mediasList;
     }
 
-    /**
-     * Extracts media details from an HTML element and creates a {@code Media} object.
-     *
-     * @param result    The Jsoup element containing media details.
-     * @param mediaType The type of media to scrape.
-     * @param platform  The platform for which to scrape media.
-     * @param genre     The genre of media to scrape.
-     * @return A {@code Media} object populated with details from the HTML element.
-     */
-    private static Media extractMediaFromElement(Element result, String mediaType, String platform, String genre) {
-        String pictureUrl = result.select("img[src]").attr("src");
-        String title = result.select("h3.c-finderProductCard_titleHeading span:nth-child(2)").text();
-        String description = result.select("div.c-finderProductCard_description span").text();
-        String releaseDate = result.select("span.u-text-uppercase").text();
-        String ratedScore = result.select("span:nth-child(3)").text();
-        String originalURL = result.select("a.c-finderProductCard_container").attr("href");
-        String metascore = result.select("div.c-siteReviewScore span").text();
-        String extraInfo = result.select("div.product_details").text();
+    // Cannot use this method because we updated the Media class to a JavaBean that use getters and setters instead of a constructor
+    // /**
+    //  * Extracts media details from an HTML element and creates a {@code Media} object.
+    //  *
+    //  * @param result    The Jsoup element containing media details.
+    //  * @param mediaType The type of media to scrape.
+    //  * @param platform  The platform for which to scrape media.
+    //  * @param genre     The genre of media to scrape.
+    //  * @return A {@code Media} object populated with details from the HTML element.
+    //  */
+    // private static Media extractMediaFromElement(Element result, String mediaType, String platform, String genre) {
+    //     String pictureUrl = result.select("img[src]").attr("src");
+    //     String title = result.select("h3.c-finderProductCard_titleHeading span:nth-child(2)").text();
+    //     String description = result.select("div.c-finderProductCard_description span").text();
+    //     String releaseDate = result.select("span.u-text-uppercase").text();
+    //     String ratedScore = result.select("span:nth-child(3)").text();
+    //     String originalURL = result.select("a.c-finderProductCard_container").attr("href");
+    //     String metascore = result.select("div.c-siteReviewScore span").text();
+    //     String extraInfo = result.select("div.product_details").text();
     
-        return new Media(mediaType, pictureUrl, title, description, platform, genre, releaseDate, ratedScore, originalURL, metascore, extraInfo);
-    }    
+    //     return new Media(mediaType, pictureUrl, title, description, platform, genre, releaseDate, ratedScore, originalURL, metascore, extraInfo);
+    // }
+    
+    private static Media extractMediaFromElement(Element result, String mediaType, String platform, String genre) {
+        Media media = new Media();
+        media.setMediaType(mediaType);
+        media.setPictureUrl(result.select("img[src]").attr("src"));
+        media.setTitle(result.select("h3.c-finderProductCard_titleHeading span:nth-child(2)").text());
+        media.setDescription(result.select("div.c-finderProductCard_description span").text());
+        media.setPlatform(platform);
+        media.setGenre(genre);
+        media.setReleaseDate(result.select("span.u-text-uppercase").text());
+        media.setRatedScore(result.select("span:nth-child(3)").text());
+        media.setOriginalURL(result.select("a.c-finderProductCard_container").attr("href"));
+        media.setMetascore(result.select("div.c-siteReviewScore span").text());
+        media.setExtraInfo(result.select("div.product_details").text());
+
+        return media;
+    }
+
 }
